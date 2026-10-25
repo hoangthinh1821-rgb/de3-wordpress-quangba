@@ -1,0 +1,11 @@
+# Giữ LF cho file chạy trên Linux (script CRLF sẽ lỗi "bad interpreter")
+* text=auto
+*.sh          text eol=lf
+*.yml         text eol=lf
+*.yaml        text eol=lf
+*.conf        text eol=lf
+*.template    text eol=lf
+Dockerfile    text eol=lf
+*.cnf         text eol=lf
+*.key         -text
+*.crt         -text
