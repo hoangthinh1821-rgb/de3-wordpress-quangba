@@ -1,0 +1,85 @@
+# =====================================================================
+# Alerting rules - De 3
+# Kiem tra cu phap: promtool check rules /etc/prometheus/rules/alerts.yml
+# =====================================================================
+groups:
+  - name: availability
+    interval: 30s
+    rules:
+      - alert: TargetDown
+        expr: up == 0
+        for: 2m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Target {{ $labels.job }} khong phan hoi"
+          description: "Prometheus khong scrape duoc {{ $labels.instance }} trong 2 phut (up = 0)."
+
+      - alert: PrometheusConfigReloadFailed
+        expr: prometheus_config_last_reload_successful == 0
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Nap lai cau hinh Prometheus that bai"
+          description: "prometheus.yml hoac rules loi cu phap (chay promtool check config)."
+
+  - name: host-resources
+    interval: 30s
+    rules:
+      - alert: HighCpuUsage
+        expr: 100 - (avg by (instance) (rate(node_cpu_seconds_total{mode="idle"}[5m])) * 100) > 85
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "CPU su dung cao ({{ printf \"%.1f\" $value }}%)"
+          description: "CPU > 85% trong 5 phut tren {{ $labels.instance }}."
+
+      - alert: HighMemoryUsage
+        expr: (1 - (node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes)) * 100 > 90
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "RAM su dung cao ({{ printf \"%.1f\" $value }}%)"
+          description: "RAM > 90% trong 5 phut - nguy co bi OOM killer."
+
+      - alert: LowDiskSpace
+        expr: (node_filesystem_avail_bytes{mountpoint="/",fstype!~"tmpfs|overlay"} / node_filesystem_size_bytes{mountpoint="/",fstype!~"tmpfs|overlay"}) * 100 < 15
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: "O dia sap day ({{ printf \"%.1f\" $value }}% con lai)"
+          description: "Dung luong trong < 15% - Prometheus/Loki se ngung ghi duoc."
+
+  - name: application
+    interval: 30s
+    rules:
+      - alert: MySQLDown
+        expr: mysql_up == 0
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "MySQL khong truy cap duoc"
+          description: "mysqld-exporter bao mysql_up = 0 - website se loi 500."
+
+      - alert: MySQLTooManyConnections
+        expr: mysql_global_status_threads_connected > 80
+        for: 2m
+        labels:
+          severity: warning
+        annotations:
+          summary: "MySQL co nhieu ket noi ({{ $value }})"
+          description: "So ket noi > 80, gan cham max_connections = 100."
+
+      - alert: MySQLSlowQueriesIncreasing
+        expr: rate(mysql_global_status_slow_queries[5m]) > 1
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Toc do truy van cham tang"
+          description: "Hon 1 truy van cham/giay trong 5 phut - kiem tra index cua bang wp_posts."

@@ -1,0 +1,16 @@
+# =====================================================================
+# Grafana tu dong nap dashboard tu thu muc nay
+# =====================================================================
+apiVersion: 1
+
+providers:
+  - name: 'De 3 Dashboard'
+    orgId: 1
+    folder: 'De 3 - WordPress'
+    type: file
+    disableDeletion: false
+    updateIntervalSeconds: 30
+    allowUiUpdates: true
+    options:
+      path: /etc/grafana/provisioning/dashboards
+      foldersFromFilesStructure: false

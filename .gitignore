@@ -1,0 +1,26 @@
+# Bí mật - không bao giờ commit
+.env
+.env.*
+!.env.example
+
+# Chứng chỉ TLS sinh tại chỗ
+nginx/certs/*.key
+nginx/certs/*.crt
+nginx/certs/*.pem
+!nginx/certs/.gitkeep
+
+# Dữ liệu backup
+backups/
+*.dump
+*.sql.gz
+
+# Log
+*.log
+nginx_logs/
+
+# Hệ điều hành / editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.swp

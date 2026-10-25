@@ -1,0 +1,111 @@
+# =====================================================================
+# Sinh ra bởi entrypoint của image nginx (envsubst) tai
+# /etc/nginx/conf.d/default.conf
+# Bien duoc thay: ${SERVER_NAME}
+# =====================================================================
+
+upstream wordpress_upstream {
+    server wordpress:80;
+    keepalive 16;
+}
+
+# ---------------------------------------------------------------------
+# HTTP -> HTTPS
+# ---------------------------------------------------------------------
+server {
+    listen      80;
+    listen      [::]:80;
+    server_name ${SERVER_NAME};
+
+    # Endpoint cho healthcheck, khong ghi log
+    location = /healthz {
+        access_log off;
+        add_header Content-Type text/plain;
+        return 200 "ok\n";
+    }
+
+    location / {
+        return 301 https://$host$request_uri;
+    }
+}
+
+# ---------------------------------------------------------------------
+# HTTPS - website quang ba san pham
+# ---------------------------------------------------------------------
+server {
+    listen      443 ssl;
+    listen      [::]:443 ssl;
+    http2       on;
+    server_name ${SERVER_NAME};
+
+    ssl_certificate     /etc/nginx/certs/server.crt;
+    ssl_certificate_key /etc/nginx/certs/server.key;
+
+    ssl_protocols             TLSv1.2 TLSv1.3;
+    ssl_ciphers               ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305;
+    ssl_prefer_server_ciphers off;
+    ssl_session_cache         shared:SSL:10m;
+    ssl_session_timeout       1d;
+    ssl_session_tickets       off;
+
+    # --- Security headers ---
+    add_header Strict-Transport-Security "max-age=86400" always;
+    add_header X-Frame-Options           "SAMEORIGIN" always;
+    add_header X-Content-Type-Options    "nosniff" always;
+    add_header Referrer-Policy           "strict-origin-when-cross-origin" always;
+    add_header Permissions-Policy        "geolocation=(), microphone=(), camera=()" always;
+
+    # Cho phép upload ảnh sản phẩm / plugin lớn
+    client_max_body_size 64m;
+
+    location = /healthz {
+        access_log off;
+        add_header Content-Type text/plain;
+        return 200 "ok\n";
+    }
+
+    # -----------------------------------------------------------------
+    # 1) WordPress - toan bo website
+    # -----------------------------------------------------------------
+    location / {
+        proxy_pass         http://wordpress_upstream;
+        proxy_http_version 1.1;
+        proxy_set_header   Connection        "";
+        proxy_set_header   Host              $host;
+        proxy_set_header   X-Real-IP         $remote_addr;
+        proxy_set_header   X-Forwarded-For   $proxy_add_x_forwarded_for;
+        proxy_set_header   X-Forwarded-Proto $scheme;
+        proxy_set_header   X-Forwarded-Host  $host;
+        proxy_read_timeout 120s;
+        proxy_send_timeout 120s;
+    }
+
+    # -----------------------------------------------------------------
+    # 2) phpMyAdmin - quan tri CSDL (duong dan con /phpmyadmin/)
+    # -----------------------------------------------------------------
+    location /phpmyadmin/ {
+        proxy_pass         http://phpmyadmin:80/;
+        proxy_http_version 1.1;
+        proxy_set_header   Host              $host;
+        proxy_set_header   X-Real-IP         $remote_addr;
+        proxy_set_header   X-Forwarded-For   $proxy_add_x_forwarded_for;
+        proxy_set_header   X-Forwarded-Proto $scheme;
+        proxy_read_timeout 300s;
+    }
+
+    # -----------------------------------------------------------------
+    # 3) Grafana - dashboard giam sat (duong dan con /grafana/)
+    # -----------------------------------------------------------------
+    location /grafana/ {
+        proxy_pass         http://grafana:3000;
+        proxy_http_version 1.1;
+        proxy_set_header   Host              $host;
+        proxy_set_header   X-Real-IP         $remote_addr;
+        proxy_set_header   X-Forwarded-For   $proxy_add_x_forwarded_for;
+        proxy_set_header   X-Forwarded-Proto $scheme;
+        # WebSocket cho Live/Streaming cua Grafana
+        proxy_set_header   Upgrade           $http_upgrade;
+        proxy_set_header   Connection        "upgrade";
+        proxy_read_timeout 300s;
+    }
+}

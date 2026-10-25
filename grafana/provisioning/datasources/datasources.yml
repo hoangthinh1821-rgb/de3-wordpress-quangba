@@ -1,0 +1,29 @@
+# =====================================================================
+# Grafana tu dong nap datasource khi khoi dong
+# =====================================================================
+apiVersion: 1
+
+datasources:
+  # Metrics (Prometheus)
+  - name: Prometheus
+    type: prometheus
+    access: proxy
+    url: http://prometheus:9090
+    isDefault: true
+    jsonData:
+      timeInterval: 15s
+      httpMethod: POST
+
+  # Logs (Loki)
+  - name: Loki
+    type: loki
+    access: proxy
+    url: http://loki:3100
+    jsonData:
+      maxLines: 1000
+      derivedFields:
+        # Bam vao ma loi (vi du [E123]) trong log de mo nhanh
+        - datasourceUid: loki
+          matcherRegex: 'request_id=(\\w+)'
+          name: request_id
+          url: '$${__value.raw}'

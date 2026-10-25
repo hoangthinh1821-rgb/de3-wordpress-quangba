@@ -1,0 +1,62 @@
+name: CI - Kiem tra cau hinh De 3
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  validate:
+    name: Validate compose / nginx / prometheus / shell
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Tao .env tu mau
+        run: cp .env.example .env
+
+      - name: Kiem tra cu phap docker-compose
+        run: docker compose config -q && echo "compose OK"
+
+      - name: Build image nginx
+        run: docker build -t de3-nginx:ci ./nginx
+
+      - name: Kiem tra cau hinh nginx (nginx -t)
+        run: |
+          mkdir -p nginx/certs
+          openssl req -x509 -nodes -newkey rsa:2048 -days 1 \
+            -keyout nginx/certs/server.key -out nginx/certs/server.crt \
+            -subj "/CN=ci.local" >/dev/null 2>&1
+          docker run --rm \
+            -v "$PWD/nginx/certs:/etc/nginx/certs:ro" \
+            -e SERVER_NAME=ci.local \
+            de3-nginx:ci nginx -t
+
+      - name: Kiem tra cau hinh Prometheus (promtool)
+        run: |
+          docker run --rm \
+            -v "$PWD/prometheus:/etc/prometheus:ro" \
+            --entrypoint promtool \
+            prom/prometheus:latest check config /etc/prometheus/prometheus.yml
+
+      - name: Kiem tra alerting rules (promtool)
+        run: |
+          docker run --rm \
+            -v "$PWD/prometheus:/etc/prometheus:ro" \
+            --entrypoint promtool \
+            prom/prometheus:latest check rules /etc/prometheus/rules/alerts.yml
+
+      - name: Lint shell script
+        run: shellcheck scripts/*.sh
+
+      - name: Chan commit bi mat
+        run: |
+          if grep -rnE '^(MYSQL_ROOT_PASSWORD|MYSQL_PASSWORD|GRAFANA_ADMIN_PASSWORD|READONLY_PASSWORD|MYSQL_EXPORTER_PASSWORD)=[^d]' .env 2>/dev/null; then
+            echo "::error::Phat hien mat khau that trong .env - khong duoc commit"
+            exit 1
+          fi
+          echo "Khong phat hien bi mat."

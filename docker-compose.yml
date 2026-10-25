@@ -1,0 +1,279 @@
+# =====================================================================
+# Đề 3 - Website Quảng bá Sản phẩm (WordPress)
+# Học phần: Triển khai và Quản trị hệ thống phần mềm
+#
+# Kiến trúc:
+#   Internet -> Nginx (TLS, reverse proxy) -> WordPress -> MySQL
+#   Monitoring: Prometheus + Grafana + Loki/Promtail + node-exporter
+# =====================================================================
+name: de3-wordpress
+
+x-common: &common
+  restart: unless-stopped
+  security_opt:
+    - no-new-privileges:true
+  logging:
+    driver: json-file
+    options:
+      max-size: "10m"
+      max-file: "3"
+
+services:
+  # ------------------------------------------------------------------
+  # 1. Nginx - TLS termination + reverse proxy
+  # ------------------------------------------------------------------
+  nginx:
+    <<: *common
+    build:
+      context: ./nginx
+    image: de3-nginx:1.0
+    container_name: de3-nginx
+    ports:
+      - "${NGINX_HTTP_PORT:-80}:80"
+      - "${NGINX_HTTPS_PORT:-443}:443"
+    environment:
+      SERVER_NAME: ${SERVER_NAME:-shop.local}
+    volumes:
+      - ./nginx/certs:/etc/nginx/certs:ro
+      - nginx_logs:/var/log/nginx
+    networks:
+      - frontend
+    depends_on:
+      wordpress:
+        condition: service_healthy
+      phpmyadmin:
+        condition: service_started
+      grafana:
+        condition: service_started
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--no-check-certificate", "-O", "/dev/null", "https://localhost/healthz"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 15s
+    mem_limit: 128m
+
+  # ------------------------------------------------------------------
+  # 2. WordPress - ứng dụng quảng bá sản phẩm
+  # ------------------------------------------------------------------
+  wordpress:
+    <<: *common
+    image: wordpress:php8.2-apache
+    container_name: de3-wordpress
+    environment:
+      WORDPRESS_DB_HOST: mysql:3306
+      WORDPRESS_DB_NAME: ${MYSQL_DATABASE}
+      WORDPRESS_DB_USER: ${MYSQL_USER}
+      WORDPRESS_DB_PASSWORD: ${MYSQL_PASSWORD}
+      WORDPRESS_CONFIG_EXTRA: |
+        define('WP_HOME', 'https://${SERVER_NAME}');
+        define('WP_SITEURL', 'https://${SERVER_NAME}');
+        define('FORCE_SSL_ADMIN', true);
+        define('DISALLOW_FILE_EDIT', true);
+        define('WP_AUTO_UPDATE_CORE', false);
+    volumes:
+      - wordpress_data:/var/www/html
+    networks:
+      - frontend
+      - backend
+    depends_on:
+      mysql:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "php", "-r", "exit(@fsockopen('127.0.0.1',80)?0:1);"]
+      interval: 30s
+      timeout: 5s
+      retries: 5
+      start_period: 90s
+    mem_limit: 512m
+
+  # ------------------------------------------------------------------
+  # 3. MySQL - cơ sở dữ liệu (không mở cổng ra ngoài)
+  # ------------------------------------------------------------------
+  mysql:
+    <<: *common
+    image: mysql:8.0
+    container_name: de3-mysql
+    command:
+      - --default-authentication-plugin=caching_sha2_password
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+      - --max-connections=100
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      READONLY_PASSWORD: ${READONLY_PASSWORD}
+      MYSQL_EXPORTER_USER: ${MYSQL_EXPORTER_USER}
+      MYSQL_EXPORTER_PASSWORD: ${MYSQL_EXPORTER_PASSWORD}
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./mysql/conf.d:/etc/mysql/conf.d:ro
+      - ./mysql/init:/docker-entrypoint-initdb.d:ro
+    networks:
+      - backend
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h 127.0.0.1 -u root -p$$MYSQL_ROOT_PASSWORD --silent"]
+      interval: 15s
+      timeout: 5s
+      retries: 10
+      start_period: 40s
+    mem_limit: 768m
+
+  # ------------------------------------------------------------------
+  # 4. phpMyAdmin - quản trị CSDL qua web (đi qua Nginx)
+  # ------------------------------------------------------------------
+  phpmyadmin:
+    <<: *common
+    image: phpmyadmin:latest
+    container_name: de3-phpmyadmin
+    environment:
+      PMA_HOST: mysql
+      PMA_PORT: 3306
+      PMA_ABSOLUTE_URI: "https://${SERVER_NAME}/phpmyadmin/"
+      UPLOAD_LIMIT: 64M
+      MAX_EXECUTION_TIME: 300
+    networks:
+      - frontend
+      - backend
+    depends_on:
+      mysql:
+        condition: service_healthy
+    mem_limit: 256m
+
+  # ------------------------------------------------------------------
+  # 5. Prometheus - thu thập metrics (Pull model)
+  # ------------------------------------------------------------------
+  prometheus:
+    <<: *common
+    image: prom/prometheus:latest
+    container_name: de3-prometheus
+    command:
+      - --config.file=/etc/prometheus/prometheus.yml
+      - --storage.tsdb.path=/prometheus
+      - --storage.tsdb.retention.time=15d
+      - --web.console.libraries=/usr/share/prometheus/console_libraries
+      - --web.console.templates=/usr/share/prometheus/consoles
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - ./prometheus/rules:/etc/prometheus/rules:ro
+      - prometheus_data:/prometheus
+    ports:
+      - "127.0.0.1:${PROMETHEUS_PORT:-9090}:9090"
+    networks:
+      - monitoring
+    mem_limit: 512m
+
+  # ------------------------------------------------------------------
+  # 6. Grafana - trực quan hoá (đi qua Nginx tại /grafana/)
+  # ------------------------------------------------------------------
+  grafana:
+    <<: *common
+    image: grafana/grafana:latest
+    container_name: de3-grafana
+    environment:
+      GF_SECURITY_ADMIN_USER: ${GRAFANA_ADMIN_USER}
+      GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_ADMIN_PASSWORD}
+      GF_SERVER_ROOT_URL: "https://${SERVER_NAME}/grafana/"
+      GF_SERVER_SERVE_FROM_SUB_PATH: "true"
+      GF_USERS_ALLOW_SIGN_UP: "false"
+      GF_AUTH_ANONYMOUS_ENABLED: "false"
+      GF_ANALYTICS_REPORTING_ENABLED: "false"
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./grafana/provisioning:/etc/grafana/provisioning:ro
+    networks:
+      - frontend
+      - monitoring
+    depends_on:
+      - prometheus
+    mem_limit: 384m
+
+  # ------------------------------------------------------------------
+  # 7. Loki - lưu trữ log tập trung
+  # ------------------------------------------------------------------
+  loki:
+    <<: *common
+    image: grafana/loki:latest
+    container_name: de3-loki
+    command: -config.file=/etc/loki/loki-config.yml
+    volumes:
+      - ./loki/loki-config.yml:/etc/loki/loki-config.yml:ro
+      - loki_data:/loki
+    networks:
+      - monitoring
+    mem_limit: 384m
+
+  # ------------------------------------------------------------------
+  # 8. Promtail - agent thu thập log container
+  # ------------------------------------------------------------------
+  promtail:
+    <<: *common
+    image: grafana/promtail:latest
+    container_name: de3-promtail
+    command: -config.file=/etc/promtail/promtail-config.yml
+    volumes:
+      - ./promtail/promtail-config.yml:/etc/promtail/promtail-config.yml:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /var/lib/docker/containers:/var/lib/docker/containers:ro
+    networks:
+      - monitoring
+    depends_on:
+      - loki
+    mem_limit: 128m
+
+  # ------------------------------------------------------------------
+  # 9. node-exporter - metrics tài nguyên host
+  # ------------------------------------------------------------------
+  node-exporter:
+    <<: *common
+    image: prom/node-exporter:latest
+    container_name: de3-node-exporter
+    command:
+      - --path.rootfs=/host
+      - --path.procfs=/host/proc
+      - --path.sysfs=/host/sys
+    volumes:
+      - /:/host:ro,rslave
+    pid: host
+    networks:
+      - monitoring
+    mem_limit: 64m
+
+  # ------------------------------------------------------------------
+  # 10. mysqld-exporter - metrics MySQL
+  # ------------------------------------------------------------------
+  mysqld-exporter:
+    <<: *common
+    image: prom/mysqld-exporter:latest
+    container_name: de3-mysqld-exporter
+    environment:
+      DATA_SOURCE_NAME: "${MYSQL_EXPORTER_USER}:${MYSQL_EXPORTER_PASSWORD}@(mysql:3306)/"
+    networks:
+      - backend
+      - monitoring
+    depends_on:
+      mysql:
+        condition: service_healthy
+    mem_limit: 64m
+
+volumes:
+  mysql_data:
+  wordpress_data:
+  prometheus_data:
+  grafana_data:
+  loki_data:
+  nginx_logs:
+
+networks:
+  # Mặt tiền: Nginx <-> WordPress / phpMyAdmin / Grafana
+  frontend:
+    driver: bridge
+  # Vùng dữ liệu: WordPress / phpMyAdmin / exporter <-> MySQL (không ra Internet)
+  backend:
+    driver: bridge
+    internal: true
+  # Vùng giám sát: Prometheus / Grafana / Loki / Promtail / exporters
+  monitoring:
+    driver: bridge
