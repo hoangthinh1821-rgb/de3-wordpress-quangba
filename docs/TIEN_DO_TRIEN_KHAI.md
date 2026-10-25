@@ -14,7 +14,7 @@ Cập nhật lần cuối: 25/10/2026
 | Sao lưu | `backups/db_shop_db_*.sql.gz` + `wpdata_*.tar.gz`, giữ 7 bản |
 | Giao diện website | Theme riêng `annhien`: 3 trang, 5 sản phẩm, menu, favicon; đã kiểm tra ở desktop/tablet/mobile |
 | Báo cáo | `BaoCao_De3_WordPress_QuangBa.docx` (30 trang) và `.pdf` |
-| Repo GitHub | **Chưa tạo** — việc còn lại của người thực hiện |
+| Repo GitHub | Đã tạo và đẩy lên: `hoangthinh1821-rgb/de3-wordpress-quangba` (private) |
 
 ## 2. Lệnh vận hành nhanh (trên máy ảo)
 
@@ -64,19 +64,11 @@ Tài khoản và mật khẩu nằm trong `.env` trên máy ảo (không commit 
 grep -E 'WP_ADMIN|GRAFANA_ADMIN|MYSQL_USER|READONLY' ~/de3-wordpress-quangba/.env
 ```
 
-## 4. Việc còn lại
+## 4. Repo GitHub
 
-1. Tạo repo trên GitHub (ví dụ `de3-wordpress-quangba`, để **private** vì đây là bài học phần).
-2. Đẩy mã nguồn lên:
+Mã nguồn đã đẩy lên: <https://github.com/hoangthinh1821-rgb/de3-wordpress-quangba> (private).
 
-   ```bash
-   cd "/c/Users/hoang/OneDrive/Máy tính/TK&QTHT/De3_WordPress_QuangBa"
-   git remote add origin git@github.com:hoangthinh1821-rgb/de3-wordpress-quangba.git
-   git branch -M main
-   git push -u origin main
-   ```
-
-3. Kiểm tra tab **Actions** trên GitHub — pipeline 6 bước phải chạy xanh.
+Việc còn lại: mở tab **Actions** trên GitHub, bảo đảm pipeline 6 bước chạy xanh.
 
 ## 5. Ghi chú kỹ thuật
 
