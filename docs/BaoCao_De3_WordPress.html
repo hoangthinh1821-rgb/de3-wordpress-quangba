@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<title>Bao cao De 3 - Website Quang ba San pham (WordPress)</title>
+<style>
+@page { size: A4; margin: 2.5cm 2.5cm 2.5cm 3cm; }
+body { font-family: "Times New Roman", serif; font-size: 13pt; line-height: 1.5; text-align: justify; }
+p { margin: 0 0 6pt 0; text-indent: 1.27cm; }
+p.noindent { text-indent: 0; }
+h1 { font-family: "Times New Roman", serif; font-size: 16pt; text-align: center; text-transform: uppercase; page-break-before: always; margin: 18pt 0 12pt 0; }
+h2 { font-family: "Times New Roman", serif; font-size: 14pt; margin: 14pt 0 8pt 0; page-break-after: avoid; }
+h3 { font-family: "Times New Roman", serif; font-size: 13pt; margin: 12pt 0 6pt 0; page-break-after: avoid; }
+table { border-collapse: collapse; width: 100%; margin: 6pt 0 10pt 0; font-size: 11pt; }
+th, td { border: 1px solid #000000; padding: 4pt 5pt; vertical-align: top; text-align: left; }
+th { background-color: #e8e8e8; font-weight: bold; text-align: center; }
+caption { caption-side: top; font-size: 11pt; font-style: italic; text-align: center; padding-bottom: 3pt; }
+pre { font-family: "Courier New", monospace; font-size: 9pt; line-height: 1.2; background-color: #f5f5f5;
+      border: 1px solid #bbbbbb; padding: 6pt; margin: 6pt 0 10pt 0; white-space: pre-wrap; text-align: left; }
+code { font-family: "Courier New", monospace; font-size: 10.5pt; }
+ul, ol { margin: 0 0 8pt 0; padding-left: 1.0cm; }
+li { margin-bottom: 3pt; text-align: justify; }
+.cover { text-align: center; }
+.cover p { text-indent: 0; }
+.pb { page-break-after: always; }
+.center { text-align: center; }
+.small { font-size: 11pt; }
+</style>
+</head>
+<body>
+
+<!-- ==================== TRANG BÌA ==================== -->
+<div class="cover">
+<p class="noindent" style="font-size:14pt; font-weight:bold;">TRƯỜNG ĐẠI HỌC CNTT VÀ TRUYỀN THÔNG</p>
+<p class="noindent" style="font-size:13pt; font-weight:bold;">KHOA CÔNG NGHỆ THÔNG TIN</p>
+<p class="noindent" style="margin-top:36pt; font-size:18pt; font-weight:bold;">BÁO CÁO</p>
+<p class="noindent" style="font-size:14pt; font-weight:bold;">HỌC PHẦN TRIỂN KHAI &amp; QUẢN TRỊ HỆ THỐNG PHẦN MỀM</p>
+<p class="noindent" style="margin-top:24pt; font-size:13pt;">Đề tài:</p>
+<p class="noindent" style="font-size:16pt; font-weight:bold;">Website Quảng bá Sản phẩm (WordPress)</p>
+<p class="noindent" style="margin-top:48pt; font-size:13pt;">Sinh viên thực hiện: <b>PHÙNG DUY HOÀNG</b></p>
+<p class="noindent" style="font-size:13pt;">Mã sinh viên: <b>DTC245230006</b></p>
+<p class="noindent" style="font-size:13pt;">Lớp: <b>HTTT K232A</b></p>
+<p class="noindent" style="font-size:13pt;">Giảng viên hướng dẫn: <b>Hoàng Văn Tâm</b></p>
+<p class="noindent" style="margin-top:90pt; font-size:13pt; font-weight:bold;">THÁI NGUYÊN, NĂM 2026</p>
+</div>
+<!-- ==================== MỤC LỤC ==================== -->
+<p class="noindent" style="page-break-before: always; text-align:center; font-size:16pt; font-weight:bold; margin-bottom:12pt;">MỤC LỤC</p>
+<p class="noindent">%%TOC%%</p>
+
+<!-- ==================== LỜI NÓI ĐẦU ==================== -->
+<h1>LỜI NÓI ĐẦU</h1>
+
+<p>Trong bối cảnh thương mại điện tử phát triển mạnh, website không còn chỉ là trang thông tin giới thiệu mà trở thành kênh bán hàng và xây dựng thương hiệu chính của doanh nghiệp. Một website quảng bá sản phẩm tốt cần giới thiệu được danh mục, hình ảnh, thông số kỹ thuật và câu chuyện sản phẩm; đồng thời phải tải nhanh, hoạt động ổn định, có thể cập nhật nội dung thường xuyên mà không cần lập trình viên. Với các đơn vị vừa và nhỏ, WordPress là lựa chọn phổ biến vì mã nguồn mở, hệ sinh thái giao diện và plugin phong phú, cộng đồng hỗ trợ lớn.</p>
+
+<p>Tuy nhiên, đưa WordPress lên môi trường thật đòi hỏi nhiều hơn việc cài đặt vài cú nhấp chuột: cần tách biệt tầng ứng dụng và tầng dữ liệu, chấm dứt TLS tại một reverse proxy, đóng gói để tái lập được, tự động kiểm tra chất lượng mã nguồn, sao lưu định kỳ và đặc biệt là quan sát được hệ thống đang chạy ra sao. Trong học phần Triển khai và Quản trị Hệ thống Phần mềm, Đề 3 yêu cầu thực hiện đầy đủ các nội dung đó trên một máy ảo Linux thật.</p>
+
+<p>Báo cáo trình bày kết quả triển khai hệ thống Website Quảng bá Sản phẩm bằng WordPress trên máy ảo Ubuntu 18.04.6 LTS tại địa chỉ 192.168.159.128, sử dụng Docker Compose để điều phối mười container: Nginx, WordPress, MySQL, phpMyAdmin, Prometheus, Grafana, Loki, Promtail, node-exporter và mysqld-exporter. Mã nguồn được quản lý bằng Git và đóng gói bằng GitHub Actions; toàn bộ cấu hình bảo mật, sao lưu và giám sát đều ở dạng tệp cấu hình có thể kiểm tra, tái sử dụng. Các số liệu trong báo cáo được thu thập trực tiếp trên máy ảo tại thời điểm nghiệm thu ngày 25/10/2026.</p>
+
+<p>Nội dung báo cáo gồm bốn phần. Phần 1 trình bày cơ sở lý thuyết, kiến trúc và phân tích yêu cầu. Phần 2 trình bày đóng gói, quản trị cơ sở dữ liệu, cài đặt website, kiểm thử tự động và triển khai. Phần 3 trình bày Nginx, HTTPS, tăng cường bảo mật và sao lưu phục hồi. Phần 4 trình bày giám sát với Prometheus – Grafana và thu thập log tập trung với Loki – Promtail, kèm đánh giá kết quả đo được. Em xin trân trọng cảm ơn thầy giáo hướng dẫn và các thầy cô Khoa Công nghệ thông tin đã truyền đạt kiến thức và góp ý trong suốt học phần; báo cáo khó tránh khỏi thiếu sót, em mong nhận được nhận xét để tiếp tục hoàn thiện.</p>
+
+<!-- ==================== PHẦN 1 ==================== -->
+<h1>PHẦN 1: CƠ SỞ LÝ THUYẾT, KIẾN TRÚC VÀ PHÂN TÍCH YÊU CẦU</h1>
+
+<h2>1.1. Bối cảnh, mục tiêu và yêu cầu của đề tài</h2>
+
+<p>Các doanh nghiệp sản xuất và phân phối hàng tiêu dùng thường gặp ba khó khăn khi xây dựng kênh bán hàng trực tuyến: chi phí thuê ngoài dịch vụ thiết kế website cao và khó thay đổi; nội dung sản phẩm cập nhật chậm vì phụ thuộc đơn vị kỹ thuật; và việc vận hành thiếu công cụ theo dõi khiến sự cố (hết dung lượng, quá tải cơ sở dữ liệu, chứng chỉ hết hạn) chỉ được phát hiện khi khách đã phản ánh. Đề tài hướng tới một hệ thống tự vận hành được, chi phí thấp, nhân viên nội dung có thể tự đăng sản phẩm và bộ phận kỹ thuật có dữ liệu để chủ động xử lý.</p>
+
+<p>Đề 3 đặt ra các yêu cầu kỹ thuật bắt buộc sau:</p>
+<ul>
+<li><b>Website giới thiệu sản phẩm</b> xây dựng trên WordPress (hoặc tương đương), có giao diện công khai và trang quản trị nội dung.</li>
+<li><b>Cơ sở dữ liệu MySQL</b> kèm <b>phpMyAdmin</b> để quản trị trực quan.</li>
+<li><b>Quản lý mã nguồn trên GitHub</b>, có quy trình tích hợp liên tục kiểm tra cấu hình trước khi triển khai.</li>
+<li><b>Nginx làm reverse proxy</b>, chấm dứt HTTPS và định tuyến tới các dịch vụ nội bộ.</li>
+<li><b>Prometheus và Grafana</b> thu thập, trực quan hoá chỉ số hệ thống và ứng dụng.</li>
+<li><b>Loki và Promtail</b> thu thập log tập trung, truy vấn bằng LogQL.</li>
+<li><b>Hardening</b>: giảm bề mặt tấn công, phân quyền tối thiểu, không lộ cổng dữ liệu ra ngoài, bảo vệ bí mật cấu hình.</li>
+</ul>
+
+<p>Trên cơ sở đó, đề tài đặt mục tiêu cụ thể: (i) website hoạt động qua HTTPS với đầy đủ chức năng xem và quản trị nội dung; (ii) toàn bộ hệ thống tái lập được bằng một lệnh <code>docker compose up -d</code> từ kho mã nguồn; (iii) có dashboard giám sát hiển thị CPU, RAM, dung lượng đĩa, kết nối MySQL và log Nginx theo thời gian thực; (iv) có quy trình sao lưu, phục hồi và kiểm tra sức khoẻ hệ thống tự động.</p>
+
+<h2>1.2. Kiến trúc hệ thống và môi trường triển khai</h2>
+
+<p>Hệ thống được triển khai trên một máy ảo Linux đóng vai trò máy chủ đơn (single host). Toàn bộ thành phần chạy dưới dạng container, điều phối bởi Docker Compose. Thông tin môi trường được tổng hợp trong Bảng 1.1.</p>
+
+<table>
+<caption>Bảng 1.1. Môi trường triển khai</caption>
+<tr><th style="width:30%">Thành phần</th><th>Thông số</th></tr>
+<tr><td>Hệ điều hành</td><td>Ubuntu 18.04.6 LTS, kernel 4.15.0-213-generic</td></tr>
+<tr><td>Địa chỉ máy ảo</td><td>192.168.159.128 (SSH cổng 22, xác thực bằng khoá ED25519)</td></tr>
+<tr><td>Tài nguyên</td><td>2 vCPU, 4,1 GB RAM, ổ đĩa 20 GB (đã dùng 63% tại thời điểm nghiệm thu)</td></tr>
+<tr><td>Docker Engine</td><td>20.10.21, build 20.10.21-0ubuntu1~18.04.3</td></tr>
+<tr><td>Docker Compose</td><td>v2.39.2 (plugin, dùng lệnh <code>docker compose</code>)</td></tr>
+<tr><td>Thư mục triển khai</td><td><code>/home/thinh/de3-wordpress-quangba</code></td></tr>
+<tr><td>Tên miền nội bộ</td><td><code>shop.local</code> (phân giải qua <code>--resolve</code> khi kiểm thử)</td></tr>
+</table>
+
+<p>Kiến trúc logic chia làm ba vùng mạng độc lập, thể hiện nguyên tắc tách biệt tầng và giảm bề mặt tấn công:</p>
+
+<pre>
+                    Người dùng (HTTPS :443)
+                              |
+                    +---------v----------+
+                    |   Nginx (frontend) |  TLS termination, reverse proxy,
+                    |   de3-nginx        |  security headers, access log
+                    +----+----------+----+
+                         |          |
+        +----------------v--+    +--v-----------------+
+        | WordPress :80     |    | phpMyAdmin  /pma/  |
+        | de3-wordpress     |    | de3-phpmyadmin     |
+        +--------+----------+    +---------+----------+
+                 |    frontend / backend    |
+                 +------------+-------------+
+                              |
+                    +---------v----------+
+                    |  MySQL 8.0 :3306   |   backend (internal: true)
+                    |  de3-mysql         |   KHÔNG ra Internet
+                    +---------+----------+
+                              ^
+                    +---------+----------+
+                    | mysqld-exporter    |
+                    +---------+----------+
+                              |
+   monitoring network: Prometheus :9090 -> node-exporter :9100
+                        Grafana :3000   -> Loki :3100 <- Promtail
+</pre>
+
+<table>
+<caption>Bảng 1.2. Mười dịch vụ trong hệ thống</caption>
+<tr><th style="width:5%">#</th><th style="width:17%">Container</th><th style="width:26%">Image</th><th style="width:8%">RAM</th><th>Vai trò và mạng tham gia</th></tr>
+<tr><td>1</td><td>de3-nginx</td><td>de3-nginx:1.0 (build từ nginx:alpine)</td><td>128 MB</td><td>Reverse proxy, TLS, cổng 80/443 ra ngoài — frontend</td></tr>
+<tr><td>2</td><td>de3-wordpress</td><td>wordpress:php8.2-apache</td><td>512 MB</td><td>Ứng dụng website — frontend, backend</td></tr>
+<tr><td>3</td><td>de3-mysql</td><td>mysql:8.0</td><td>768 MB</td><td>Cơ sở dữ liệu, không publish cổng — backend</td></tr>
+<tr><td>4</td><td>de3-phpmyadmin</td><td>phpmyadmin:latest</td><td>256 MB</td><td>Quản trị CSDL qua web — frontend, backend</td></tr>
+<tr><td>5</td><td>de3-prometheus</td><td>prom/prometheus:latest (3.14.0)</td><td>512 MB</td><td>Thu thập metrics, bind 127.0.0.1:9090 — monitoring</td></tr>
+<tr><td>6</td><td>de3-grafana</td><td>grafana/grafana:latest (13.2.2)</td><td>384 MB</td><td>Dashboard, phục vụ tại /grafana/ — frontend, monitoring</td></tr>
+<tr><td>7</td><td>de3-loki</td><td>grafana/loki:latest (3.7.8)</td><td>384 MB</td><td>Lưu trữ log tập trung — monitoring</td></tr>
+<tr><td>8</td><td>de3-promtail</td><td>grafana/promtail:latest</td><td>128 MB</td><td>Đọc log container, đẩy về Loki — monitoring</td></tr>
+<tr><td>9</td><td>de3-node-exporter</td><td>prom/node-exporter:latest</td><td>64 MB</td><td>Metrics CPU/RAM/đĩa mạng của host — monitoring</td></tr>
+<tr><td>10</td><td>de3-mysqld-exporter</td><td>prom/mysqld-exporter:latest</td><td>64 MB</td><td>Metrics MySQL — backend, monitoring</td></tr>
+</table>
+
+<table>
+<caption>Bảng 1.3. Ba mạng Docker và mục đích cách ly</caption>
+<tr><th style="width:22%">Mạng</th><th style="width:18%">Loại</th><th>Thành viên và lý do</th></tr>
+<tr><td>frontend</td><td>bridge</td><td>nginx, wordpress, phpmyadmin, grafana. Chỉ các dịch vụ cần nhận request từ Nginx mới nằm ở đây.</td></tr>
+<tr><td>backend</td><td>bridge, <b>internal: true</b></td><td>mysql, wordpress, phpmyadmin, mysqld-exporter. Không có route ra Internet, nên dù bị chiếm quyền, kẻ tấn công không thể đưa dữ liệu ra ngoài qua tầng này.</td></tr>
+<tr><td>monitoring</td><td>bridge</td><td>prometheus, grafana, loki, promtail, node-exporter, mysqld-exporter. Tách lưu lượng giám sát khỏi lưu lượng người dùng.</td></tr>
+</table>
+
+<p>Sáu volume có tên được khai báo để dữ liệu tồn tại độc lập với vòng đời container: <code>mysql_data</code>, <code>wordpress_data</code>, <code>prometheus_data</code>, <code>grafana_data</code>, <code>loki_data</code> và <code>nginx_logs</code>. Nhờ đó có thể nâng cấp image, tạo lại container mà không mất cơ sở dữ liệu, nội dung đã đăng hay lịch sử chỉ số.</p>
+
+<h2>1.3. Phân tích nghiệp vụ và mô hình dữ liệu WordPress</h2>
+
+<p>Về nghiệp vụ, hệ thống phục vụ hai nhóm người dùng. Nhóm công khai gồm khách truy cập: xem trang chủ, danh mục sản phẩm, trang chi tiết sản phẩm, tin tức và gửi liên hệ. Nhóm quản trị gồm biên tập viên và quản trị viên: đăng/sửa sản phẩm, tải ảnh, quản lý danh mục, bình luận và cấu hình website. WordPress đáp ứng sẵn các nghiệp vụ này thông qua mô hình nội dung gồm bài viết, trang và danh mục.</p>
+
+<p>Cơ sở dữ liệu do WordPress tự sinh trong lần cài đặt đầu tiên, gồm các bảng cốt lõi được mô tả trong Bảng 1.4. Việc hiểu cấu trúc này cần thiết cho công tác sao lưu, tối ưu truy vấn và tạo tài khoản chỉ đọc phục vụ báo cáo.</p>
+
+<table>
+<caption>Bảng 1.4. Các bảng cốt lõi của WordPress</caption>
+<tr><th style="width:30%">Bảng</th><th>Nội dung</th></tr>
+<tr><td>wp_posts</td><td>Bài viết, trang, sản phẩm, bản nháp, menu, media. Trường <code>post_type</code> phân biệt loại nội dung, <code>post_status</code> phân biệt công khai/bản nháp.</td></tr>
+<tr><td>wp_postmeta</td><td>Siêu dữ liệu gắn với bài viết: giá, mã sản phẩm, ảnh phụ, thông số kỹ thuật (khoá – giá trị).</td></tr>
+<tr><td>wp_terms / wp_term_taxonomy</td><td>Danh mục, thẻ và các taxonomy; phân cấp danh mục sản phẩm.</td></tr>
+<tr><td>wp_term_relationships</td><td>Liên kết nhiều–nhiều giữa nội dung và danh mục.</td></tr>
+<tr><td>wp_users / wp_usermeta</td><td>Tài khoản quản trị, biên tập viên; mật khẩu lưu dưới dạng băm (bcrypt/phpass), không lưu văn bản thuần.</td></tr>
+<tr><td>wp_options</td><td>Cấu hình website: tên miền, đường dẫn, giao diện đang dùng, plugin kích hoạt.</td></tr>
+<tr><td>wp_comments</td><td>Bình luận của khách, cần kiểm duyệt để tránh spam.</td></tr>
+</table>
+
+<p>Vì mục tiêu của đề tài là <i>quảng bá</i> sản phẩm chứ không phải bán hàng có giỏ hàng và thanh toán, hệ thống sử dụng mô hình nội dung mặc định của WordPress: mỗi sản phẩm là một bài viết/trang có ảnh đại diện, mô tả và thông số trong <code>wp_postmeta</code>. Cách tiếp cận này giữ hệ thống nhẹ, phù hợp giới hạn 4,1 GB RAM của máy ảo. Nếu cần giỏ hàng thật, có thể bổ sung WooCommerce mà không phải thay đổi kiến trúc hạ tầng; phần này được nêu trong hướng phát triển ở cuối báo cáo.</p>
+
+<p>Về yêu cầu phi chức năng, hệ thống đặt ra các chỉ tiêu: thời gian phản hồi trang dưới 1 giây với nội dung tĩnh; độ sẵn sàng mục tiêu 99% trong giờ học; sao lưu hằng ngày và giữ 7 bản gần nhất; log được lưu tối thiểu 7 ngày để phục vụ điều tra sự cố.</p>
+
+<!-- ==================== PHẦN 2 ==================== -->
+<h1>PHẦN 2: XÂY DỰNG, ĐÓNG GÓI VÀ TRIỂN KHAI ỨNG DỤNG</h1>
+
+<h2>2.1. Cấu trúc mã nguồn và các mốc phát hành</h2>
+
+<p>Mã nguồn được tổ chức theo nguyên tắc "hạ tầng là mã" (Infrastructure as Code): mọi cấu hình đều là tệp văn bản nằm trong kho Git, không có bước thiết lập thủ công nào trên máy chủ. Cấu trúc thư mục dự án như sau:</p>
+
+<pre>
+de3-wordpress-quangba/
+├── docker-compose.yml          # Điều phối 10 dịch vụ, 3 mạng, 6 volume
+├── .env.example                # Mẫu biến môi trường (không chứa giá trị thật)
+├── .gitignore                  # Loại trừ .env, khoá riêng tư, bản sao lưu
+├── .gitattributes              # Ép LF cho script Linux, chặn CRLF
+├── README.md                   # Kiến trúc, hướng dẫn triển khai, PromQL/LogQL mẫu
+├── nginx/
+│   ├── Dockerfile              # nginx:alpine + cấu hình riêng + healthcheck
+│   ├── nginx.conf              # server_tokens off, log format, gzip
+│   ├── templates/default.conf.template   # Sinh bằng envsubst khi khởi động
+│   └── certs/                  # server.crt, server.key (bị .gitignore)
+├── mysql/
+│   ├── conf.d/my.cnf           # utf8mb4, slow query log, buffer pool
+│   └── init/01-create-users.sh # Tạo user chỉ đọc và user cho exporter
+├── prometheus/
+│   ├── prometheus.yml          # 4 scrape job
+│   └── rules/alerts.yml        # 3 nhóm, 8 cảnh báo
+├── loki/loki-config.yml        # Schema v13/tsdb, retention 168h
+├── promtail/promtail-config.yml# docker_sd_configs + relabel
+├── grafana/provisioning/
+│   ├── datasources/datasources.yml      # UID cố định prometheus-main, loki-main
+│   └── dashboards/                      # Provider + de3-overview.json
+├── mysqld-exporter/.my.cnf     # Chứa mật khẩu (bị .gitignore, chmod 600)
+├── scripts/
+│   ├── init-env.sh             # Sinh .env và .my.cnf với mật khẩu ngẫu nhiên
+│   ├── generate-certs.sh       # Tự ký chứng chỉ TLS kèm SAN
+│   ├── install-wordpress.sh    # Cài WordPress qua HTTP, không cần trình duyệt
+│   ├── deploy.sh               # Triển khai một lệnh
+│   ├── healthcheck.sh          # Kiểm tra 6 endpoint + Prometheus targets
+│   ├── verify-observability.sh # Minh chứng Prometheus/Grafana/Loki
+│   ├── backup.sh / restore.sh  # Sao lưu và phục hồi
+│   └── diagnose.sh             # Thu thập thông tin khi có sự cố
+└── .github/workflows/ci.yml    # Pipeline kiểm tra tự động
+</pre>
+
+<p>Kho mã nguồn ghi nhận ba mốc phát hành chính, thể hiện quá trình hoàn thiện dần của hệ thống:</p>
+
+<table>
+<caption>Bảng 2.1. Các mốc phát hành trong Git</caption>
+<tr><th style="width:18%">Commit</th><th>Nội dung</th></tr>
+<tr><td>db7734b</td><td>Khởi tạo dự án: docker-compose, cấu hình Nginx, MySQL, Prometheus, Grafana, Loki và bộ script cơ bản.</td></tr>
+<tr><td>c365c37</td><td>Thêm <code>.gitattributes</code> buộc xuống dòng LF cho script Linux — sửa lỗi script không chạy trên máy ảo do bị chuyển sang CRLF khi soạn trên Windows.</td></tr>
+<tr><td>75906cb</td><td>Sửa ba lỗi triển khai thực tế (mysqld-exporter, Nginx giữ DNS cũ, Grafana provisioning) và bổ sung script cài đặt, kiểm tra, chẩn đoán.</td></tr>
+</table>
+
+<h2>2.2. Đóng gói ứng dụng bằng Docker Compose</h2>
+
+<p>Tệp <code>docker-compose.yml</code> khai báo mười dịch vụ. Để tránh lặp lại cấu hình, phần chung được gom vào một YAML anchor <code>x-common</code> rồi hợp nhất vào từng dịch vụ bằng <code>&lt;&lt;: *common</code>:</p>
+
+<pre>
+x-common: &amp;common
+  restart: unless-stopped
+  security_opt:
+    - no-new-privileges:true
+  logging:
+    driver: json-file
+    options:
+      max-size: "10m"
+      max-file: "3"
+</pre>
+
+<p>Ba thiết lập trong khối chung đều có mục đích vận hành rõ ràng. <code>restart: unless-stopped</code> giúp container tự khởi động lại sau khi máy ảo reboot hoặc khi tiến trình chính chết, nhưng vẫn tôn trọng quyết định dừng thủ công của người quản trị. <code>no-new-privileges</code> chặn việc leo thang đặc quyền qua setuid/setgid bên trong container. Giới hạn log <code>max-size 10m</code> và <code>max-file 3</code> ngăn một container lỗi liên tục ghi log làm đầy ổ đĩa — đây là sự cố đã gặp trên máy ảo 20 GB trước khi áp dụng.</p>
+
+<p>Mỗi dịch vụ có <code>mem_limit</code> riêng, tổng khoảng 3,2 GB trên 4,1 GB RAM, phần còn lại dành cho hệ điều hành và bộ đệm đĩa. Việc đặt giới hạn giúp một thành phần bị rò rỉ bộ nhớ không kéo sập toàn hệ thống; kernel sẽ dừng riêng container đó và cơ chế restart đưa nó trở lại.</p>
+
+<p>Thứ tự khởi động được kiểm soát bằng <code>depends_on</code> kèm điều kiện dựa trên healthcheck thay vì chỉ dựa vào thứ tự tạo container. MySQL được coi là sẵn sàng khi <code>mysqladmin ping</code> trả lời; WordPress chỉ khởi động sau đó; Nginx chỉ khởi động khi WordPress đã qua healthcheck:</p>
+
+<pre>
+depends_on:
+  wordpress:
+    condition: service_healthy
+  phpmyadmin:
+    condition: service_started
+  grafana:
+    condition: service_started
+</pre>
+
+<p>Healthcheck của WordPress dùng PHP có sẵn trong image để mở socket tới cổng 80, tránh phải cài thêm công cụ: <code>php -r "exit(@fsockopen('127.0.0.1',80)?0:1);"</code>. Với Nginx, image alpine có sẵn <code>wget</code> nên kiểm tra trực tiếp endpoint <code>/healthz</code> qua HTTPS:</p>
+
+<pre>
+healthcheck:
+  test: ["CMD", "wget", "-q", "--no-check-certificate", "-O", "/dev/null", "https://localhost/healthz"]
+  interval: 30s
+  timeout: 5s
+  retries: 3
+  start_period: 15s
+</pre>
+
+<p>Ở lần triển khai đầu, WordPress cần khoảng 60–90 giây để giải nén mã nguồn và tạo tệp cấu hình, nên <code>start_period</code> được đặt 90 giây. Nếu không có tham số này, healthcheck sẽ báo lỗi giả trong lúc ứng dụng còn đang khởi tạo và Nginx không được phép khởi động.</p>
+
+<h2>2.3. Cơ sở dữ liệu MySQL, phpMyAdmin và cài đặt website</h2>
+
+<h3>2.3.1. Cấu hình MySQL</h3>
+
+<p>MySQL 8.0 chạy với các tham số được đặt qua <code>command</code> để bảo đảm tiếng Việt hiển thị đúng và giới hạn tài nguyên hợp lý:</p>
+
+<pre>
+command:
+  - --default-authentication-plugin=caching_sha2_password
+  - --character-set-server=utf8mb4
+  - --collation-server=utf8mb4_unicode_ci
+  - --max-connections=100
+</pre>
+
+<p><code>utf8mb4</code> cần thiết vì nội dung sản phẩm tiếng Việt và emoji cần 4 byte cho một số ký tự; dùng <code>utf8</code> cũ sẽ làm hỏng dữ liệu. <code>max-connections=100</code> đủ cho lưu lượng học tập và tránh cạn bộ nhớ do quá nhiều kết nối.</p>
+
+<p>Tệp <code>mysql/conf.d/my.cnf</code> bổ sung cấu hình phía máy chủ: bật <code>slow_query_log</code> với ngưỡng 2 giây để phát hiện truy vấn chậm, đặt <code>innodb_buffer_pool_size = 256M</code> phù hợp với 768 MB cấp cho container, và giới hạn <code>max_connect_errors</code> để tránh khoá oan khi mạng chập chờn.</p>
+
+<h3>2.3.2. Nguyên tắc phân quyền tối thiểu</h3>
+
+<p>Script <code>mysql/init/01-create-users.sh</code> chạy tự động trong lần khởi tạo cơ sở dữ liệu đầu tiên, tạo thêm hai tài khoản ngoài tài khoản ứng dụng:</p>
+
+<ul>
+<li><code>report_ro</code>: chỉ có quyền <code>SELECT</code> và <code>SHOW VIEW</code> trên cơ sở dữ liệu <code>shop_db</code>. Dùng cho mục đích báo cáo, xuất dữ liệu hoặc phân tích; không thể sửa hay xoá dữ liệu.</li>
+<li><code>exporter</code>: có <code>PROCESS</code>, <code>REPLICATION CLIENT</code> và <code>SELECT</code> — đúng ba quyền mysqld-exporter cần để đọc trạng thái máy chủ, kèm <code>MAX_USER_CONNECTIONS 3</code> để exporter không bao giờ chiếm nhiều kết nối.</li>
+</ul>
+
+<p>Ba tài khoản (ứng dụng, chỉ đọc, exporter) đều có mật khẩu riêng sinh ngẫu nhiên. Tài khoản <code>root</code> chỉ dùng cho tác vụ quản trị khẩn cấp và sao lưu. Cách phân chia này bảo đảm nếu một thành phần bị lộ thông tin đăng nhập, phạm vi thiệt hại được giới hạn.</p>
+
+<h3>2.3.3. phpMyAdmin</h3>
+
+<p>phpMyAdmin chạy ở mạng nội bộ, không publish cổng, chỉ truy cập được qua Nginx tại đường dẫn con <code>/phpmyadmin/</code>. Cấu hình <code>PMA_ABSOLUTE_URI</code> được đặt đúng tiền tố để các tệp tĩnh và cookie phiên hoạt động chính xác khi chạy sau proxy:</p>
+
+<pre>
+environment:
+  PMA_HOST: mysql
+  PMA_PORT: 3306
+  PMA_ABSOLUTE_URI: "https://${SERVER_NAME}/phpmyadmin/"
+  UPLOAD_LIMIT: 64M
+  MAX_EXECUTION_TIME: 300
+</pre>
+
+<p>Nginx xử lý đường dẫn con bằng cách cắt tiền tố trước khi chuyển tiếp:</p>
+
+<pre>
+location /phpmyadmin/ {
+    set $phpmyadmin http://phpmyadmin:80;
+    rewrite ^/phpmyadmin/(.*)$ /$1 break;
+    proxy_pass $phpmyadmin;
+    ...
+}
+</pre>
+
+<h3>2.3.4. Cài đặt WordPress không cần trình duyệt</h3>
+
+<p>WordPress chưa có cơ sở dữ liệu cấu hình sau khi container khởi động lần đầu; truy cập trang chủ sẽ bị chuyển hướng tới trình cài đặt. Trên máy chủ không có giao diện đồ hoạ, script <code>scripts/install-wordpress.sh</code> thực hiện cài đặt qua HTTP: gửi biểu mẫu tới <code>/wp-admin/install.php?step=2</code> với tên website, tài khoản quản trị và mật khẩu lấy từ <code>.env</code>, sau đó kiểm tra mã trả về và sự tồn tại của trang đăng nhập.</p>
+
+<p>Tệp cấu hình WordPress được bổ sung qua biến <code>WORDPRESS_CONFIG_EXTRA</code> ngay từ lần tạo container, nhờ đó các thiết lập bảo mật có hiệu lực trước cả khi cài đặt:</p>
+
+<pre>
+define('WP_HOME', 'https://shop.local');
+define('WP_SITEURL', 'https://shop.local');
+define('FORCE_SSL_ADMIN', true);      // Mọi thao tác quản trị bắt buộc HTTPS
+define('DISALLOW_FILE_EDIT', true);   // Cấm sửa mã nguồn trong dashboard
+define('WP_AUTO_UPDATE_CORE', false); // Cập nhật có kiểm soát, không tự động
+</pre>
+
+<p>Hai hằng số <code>WP_HOME</code> và <code>WP_SITEURL</code> tránh lỗi kinh điển khi WordPress nằm sau reverse proxy: nếu không khai báo, WordPress sinh URL theo tiêu đề <code>Host</code> và giao thức nhận được, dẫn tới vòng lặp chuyển hướng hoặc tài nguyên tải qua HTTP trên trang HTTPS. <code>DISALLOW_FILE_EDIT</code> loại bỏ trình soạn mã trong dashboard — một đường tấn công phổ biến khi tài khoản quản trị bị chiếm.</p>
+
+<h2>2.4. Kiểm thử tự động và pipeline CI/CD</h2>
+
+<p>Kho mã nguồn có pipeline GitHub Actions tại <code>.github/workflows/ci.yml</code>, chạy khi push lên nhánh chính và khi tạo pull request. Pipeline gồm sáu nhóm kiểm tra độc lập:</p>
+
+<table>
+<caption>Bảng 2.2. Các bước kiểm tra trong pipeline</caption>
+<tr><th style="width:6%">#</th><th style="width:26%">Bước</th><th>Công cụ và mục đích</th></tr>
+<tr><td>1</td><td>Kiểm tra cú pháp Compose</td><td><code>docker compose config -q</code> — phát hiện sai YAML, biến môi trường thiếu, anchor sai.</td></tr>
+<tr><td>2</td><td>Build image Nginx</td><td><code>docker build</code> — bảo đảm Dockerfile và tệp cấu hình hợp lệ.</td></tr>
+<tr><td>3</td><td>Kiểm tra cấu hình Nginx</td><td><code>nginx -t</code> với chứng chỉ giả — bắt lỗi cú pháp trước khi triển khai.</td></tr>
+<tr><td>4</td><td>Kiểm tra Prometheus</td><td><code>promtool check config</code> và <code>promtool check rules</code> — xác thực tệp scrape và quy tắc cảnh báo.</td></tr>
+<tr><td>5</td><td>Phân tích shell script</td><td><code>shellcheck</code> — phát hiện lỗi tiềm ẩn trong tám script vận hành.</td></tr>
+<tr><td>6</td><td>Quét bí mật cấu hình</td><td><code>grep</code> tìm mẫu mật khẩu/khoá bị commit nhầm vào kho.</td></tr>
+</table>
+
+<p>Bước thứ ba là bài học từ thực tế: một lỗi thiếu dấu chấm phẩy trong <code>default.conf.template</code> chỉ làm Nginx từ chối khởi động trên máy chủ, trong khi <code>nginx -t</code> phát hiện ngay trong vài giây ở môi trường CI. Bước thứ sáu bảo vệ nguyên tắc quan trọng nhất của dự án: <b>không có giá trị bí mật nào nằm trong Git</b>. Tệp <code>.env.example</code> chỉ liệt kê tên biến, còn <code>.env</code> thật do <code>scripts/init-env.sh</code> sinh trên máy chủ với mật khẩu ngẫu nhiên 32 ký tự hex và quyền <code>600</code>.</p>
+
+<h2>2.5. Triển khai, kiểm thử và xử lý sự cố thực tế</h2>
+
+<p>Quy trình triển khai từ máy mới gồm bốn bước, được gói trong <code>scripts/deploy.sh</code>:</p>
+
+<ol>
+<li><code>./scripts/init-env.sh</code> — sinh <code>.env</code> và <code>mysqld-exporter/.my.cnf</code> với mật khẩu ngẫu nhiên, đặt quyền 600.</li>
+<li><code>./scripts/generate-certs.sh</code> — tạo chứng chỉ tự ký có SAN cho <code>shop.local</code>, <code>localhost</code> và <code>127.0.0.1</code>, hiệu lực 825 ngày.</li>
+<li><code>docker compose up -d --build</code> — tạo mạng, volume, build Nginx và khởi động mười container theo đúng thứ tự phụ thuộc.</li>
+<li><code>./scripts/install-wordpress.sh</code> — hoàn tất cài đặt WordPress qua HTTP.</li>
+</ol>
+
+<p>Sau khi triển khai, <code>scripts/healthcheck.sh</code> kiểm tra toàn bộ hệ thống và trả về mã lỗi khác 0 nếu bất kỳ mục nào thất bại, nên có thể dùng trong cron hoặc pipeline. Kết quả chạy tại thời điểm nghiệm thu:</p>
+
+<pre>
+== Endpoint qua Nginx (Host: shop.local) ==
+  [OK]   HTTP -&gt; HTTPS          /                    -&gt; 301
+  [OK]   Website                /                    -&gt; 200
+  [OK]   wp-admin               /wp-admin/           -&gt; 302
+  [OK]   Health endpoint        /healthz             -&gt; 200
+  [OK]   phpMyAdmin             /phpmyadmin/         -&gt; 200
+  [OK]   Grafana                /grafana/login       -&gt; 200
+== Prometheus (localhost) ==
+  [OK]   Prometheus healthy -&gt; 200
+== Prometheus targets ==
+        4 "health":"up"
+KET QUA: TAT CA DAT
+</pre>
+
+<p>Quá trình đưa hệ thống từ mã nguồn tới trạng thái trên gặp năm sự cố thực tế. Bảng 2.3 ghi lại nguyên nhân và cách khắc phục, vì đây là phần kiến thức chỉ có được khi triển khai thật.</p>
+
+<table>
+<caption>Bảng 2.3. Sự cố gặp phải và cách xử lý</caption>
+<tr><th style="width:5%">#</th><th style="width:22%">Hiện tượng</th><th style="width:33%">Nguyên nhân</th><th>Cách khắc phục</th></tr>
+<tr><td>1</td><td>mysqld-exporter khởi động rồi thoát liên tục, log báo "no user specified in section or parent"</td><td>Từ phiên bản 0.16, exporter bỏ hỗ trợ biến <code>DATA_SOURCE_NAME</code>; bản 0.20 yêu cầu tệp cấu hình kiểu client MySQL.</td><td>Chuyển sang <code>--config.my-cnf=/etc/mysqld-exporter/.my.cnf</code>; script <code>init-env.sh</code> sinh tệp này với quyền 600.</td></tr>
+<tr><td>2</td><td>Exporter vẫn lỗi sau khi có tệp cấu hình: "permission denied"</td><td>Tệp thuộc uid 1000 với quyền 600, còn container chạy bằng user <code>nobody</code> nên không đọc được.</td><td>Thêm <code>user: "1000:1000"</code> cho dịch vụ để tiến trình chạy đúng chủ sở hữu tệp.</td></tr>
+<tr><td>3</td><td>Sau khi tạo lại container Grafana, Nginx trả về 502</td><td>Nginx phân giải tên <code>grafana</code> một lần khi nạp cấu hình và giữ địa chỉ IP cũ; container mới có IP khác.</td><td>Thêm <code>resolver 127.0.0.11 valid=10s ipv6=off</code> và dùng biến cho <code>proxy_pass</code>, buộc phân giải lại theo chu kỳ 10 giây.</td></tr>
+<tr><td>4</td><td>Grafana không khởi động: "Datasource provisioning error: data source not found"</td><td>Dashboard tham chiếu datasource theo tên, trong khi provisioning tạo UID khác; dữ liệu cũ trong volume xung đột với cấu hình mới.</td><td>Gán UID cố định <code>prometheus-main</code>, <code>loki-main</code> trong tệp provisioning và trong JSON dashboard; xoá volume Grafana để nạp lại sạch.</td></tr>
+<tr><td>5</td><td>Tệp sao lưu <code>wpdata</code> thuộc sở hữu root, không đổi được quyền</td><td>Lệnh <code>docker run</code> mặc định chạy bằng root nên tệp tạo ra trong thư mục gắn ngoài thuộc root.</td><td>Thêm <code>--user "$(id -u):$(id -g)"</code> khi chạy container phụ trợ để tệp thuộc đúng người triển khai.</td></tr>
+</table>
+
+<p>Về cơ chế hoàn tác, do toàn bộ trạng thái nằm trong Git và volume, quy trình rollback gồm: dừng stack bằng <code>docker compose down</code>, chuyển mã nguồn về commit ổn định trước đó bằng <code>git checkout &lt;commit&gt;</code>, rồi <code>docker compose up -d</code>. Dữ liệu trong volume được giữ nguyên nên chỉ cần phục hồi cơ sở dữ liệu từ bản sao lưu gần nhất khi thay đổi có liên quan tới lược đồ. Trước mỗi lần nâng cấp, <code>backup.sh</code> được chạy để bảo đảm luôn có điểm quay lại.</p>
+
+<!-- ==================== PHẦN 3 ==================== -->
+<h1>PHẦN 3: TRIỂN KHAI NGINX, HTTPS, BẢO MẬT VÀ SAO LƯU</h1>
+
+<h2>3.1. Nginx reverse proxy và HTTPS</h2>
+
+<p>Nginx là điểm vào duy nhất của hệ thống, đảm nhiệm ba vai trò: chấm dứt TLS, định tuyến yêu cầu tới đúng dịch vụ nội bộ, và ghi log truy cập phục vụ phân tích. Image được build từ <code>nginx:alpine</code> để giữ kích thước nhỏ (62,4 MB) và loại bỏ cấu hình mặc định của image gốc.</p>
+
+<p>Cấu hình được sinh từ mẫu bằng <code>envsubst</code> ngay khi container khởi động, nhờ đó cùng một tệp mẫu dùng được cho nhiều môi trường chỉ bằng cách đổi biến <code>SERVER_NAME</code>:</p>
+
+<pre>
+server {
+    listen 80;
+    server_name ${SERVER_NAME};
+    location = /healthz { access_log off; return 200 "ok\n"; }
+    location / { return 301 https://$host$request_uri; }
+}
+
+server {
+    listen 443 ssl;
+    http2 on;
+    ssl_certificate     /etc/nginx/certs/server.crt;
+    ssl_certificate_key /etc/nginx/certs/server.key;
+    ssl_protocols       TLSv1.2 TLSv1.3;
+    ...
+}
+</pre>
+
+<p>Chứng chỉ tự ký được sinh bằng <code>openssl</code> với phần mở rộng <code>subjectAltName</code> gồm <code>DNS:shop.local</code>, <code>DNS:localhost</code> và <code>IP:127.0.0.1</code>. Trên Ubuntu 18.04, OpenSSL 1.1.0 chưa hỗ trợ tham số <code>-addext</code>, nên script tạo một tệp cấu hình tạm và truyền qua <code>-extensions v3</code>. Thiếu SAN là nguyên nhân phổ biến khiến trình duyệt hiện đại vẫn cảnh báo dù chứng chỉ hợp lệ, vì chúng không còn đọc trường <code>Common Name</code>.</p>
+
+<p>Ba đường dẫn được định tuyến tới ba upstream khác nhau, mỗi upstream dùng biến để buộc Nginx phân giải lại DNS nội bộ của Docker:</p>
+
+<table>
+<caption>Bảng 3.1. Bảng định tuyến của Nginx</caption>
+<tr><th style="width:20%">Đường dẫn</th><th style="width:26%">Upstream</th><th>Xử lý</th></tr>
+<tr><td><code>/</code></td><td>wordpress:80</td><td>Toàn bộ website công khai và trang quản trị. Thời gian chờ 120 giây cho thao tác tải ảnh dung lượng lớn.</td></tr>
+<tr><td><code>/phpmyadmin/</code></td><td>phpmyadmin:80</td><td>Cắt tiền tố bằng <code>rewrite</code> rồi chuyển tiếp; thời gian chờ 300 giây cho truy vấn nhập/xuất dữ liệu.</td></tr>
+<tr><td><code>/grafana/</code></td><td>grafana:3000</td><td>Chuyển tiếp nguyên đường dẫn (Grafana cấu hình <code>serve_from_sub_path</code>); hỗ trợ WebSocket cho tính năng Live.</td></tr>
+</table>
+
+<pre>
+resolver 127.0.0.11 valid=10s ipv6=off;
+
+location / {
+    set $wordpress http://wordpress:80;
+    proxy_pass $wordpress;
+    proxy_http_version 1.1;
+    proxy_set_header Host              $host;
+    proxy_set_header X-Real-IP         $remote_addr;
+    proxy_set_header X-Forwarded-For   $proxy_add_x_forwarded_for;
+    proxy_set_header X-Forwarded-Proto $scheme;
+}
+</pre>
+
+<p>Việc dùng biến trong <code>proxy_pass</code> là điểm kỹ thuật quan trọng. Khi <code>proxy_pass</code> nhận tên miền cố định, Nginx phân giải DNS đúng một lần lúc nạp cấu hình và giữ nguyên địa chỉ IP đó. Trong môi trường Docker, mỗi lần tạo lại container upstream, địa chỉ IP thay đổi, khiến Nginx chuyển tiếp tới địa chỉ không còn tồn tại và trả về 502. Kết hợp <code>resolver 127.0.0.11</code> (DNS nội bộ của Docker) với biến và <code>valid=10s</code>, Nginx tự phân giải lại sau mỗi 10 giây, loại bỏ hoàn toàn lớp sự cố này. Đây chính là sự cố số 3 trong Bảng 2.3.</p>
+
+<p>Ngoài định tuyến, Nginx còn thiết lập các tiêu đề bảo mật và tối ưu:</p>
+
+<pre>
+add_header Strict-Transport-Security "max-age=86400" always;
+add_header X-Frame-Options           "SAMEORIGIN" always;
+add_header X-Content-Type-Options    "nosniff" always;
+add_header Referrer-Policy           "strict-origin-when-cross-origin" always;
+add_header Permissions-Policy        "geolocation=(), microphone=(), camera=()" always;
+client_max_body_size 64m;
+</pre>
+
+<p><code>Strict-Transport-Security</code> buộc trình duyệt dùng HTTPS trong các lần truy cập sau, chống hạ cấp giao thức. <code>X-Frame-Options: SAMEORIGIN</code> ngăn nhúng website vào khung của miền khác, hạn chế tấn công clickjacking. <code>nosniff</code> chặn trình duyệt tự đoán kiểu nội dung — một đường để biến tệp tải lên thành mã script. <code>client_max_body_size 64m</code> cho phép tải ảnh sản phẩm chất lượng cao nhưng vẫn chặn tệp quá lớn.</p>
+
+<p>Cấu hình toàn cục <code>nginx.conf</code> tắt <code>server_tokens</code> để không lộ phiên bản Nginx trong phản hồi và tiêu đề lỗi, đồng thời định nghĩa định dạng log có thời gian xử lý để phục vụ phân tích hiệu năng qua Loki:</p>
+
+<pre>
+log_format main '$remote_addr - $remote_user [$time_local] "$request" '
+                '$status $body_bytes_sent "$http_referer" '
+                '"$http_user_agent" rt=$request_time urt=$upstream_response_time';
+</pre>
+
+<h2>3.2. Tăng cường bảo mật máy chủ và ứng dụng</h2>
+
+<p>Hardening được thực hiện theo nguyên tắc phòng thủ nhiều lớp: mỗi lớp giả định lớp trước có thể bị vượt qua. Bảng 3.2 tổng hợp các biện pháp đã áp dụng và lý do.</p>
+
+<table>
+<caption>Bảng 3.2. Các biện pháp tăng cường bảo mật đã triển khai</caption>
+<tr><th style="width:5%">#</th><th style="width:26%">Biện pháp</th><th style="width:20%">Phạm vi</th><th>Mục đích</th></tr>
+<tr><td>1</td><td><code>no-new-privileges:true</code></td><td>Toàn bộ 10 container</td><td>Chặn leo thang đặc quyền qua tệp setuid bên trong container.</td></tr>
+<tr><td>2</td><td><code>internal: true</code> cho mạng backend</td><td>MySQL và tầng dữ liệu</td><td>Không có route ra Internet; dữ liệu không thể bị đưa ra ngoài kể cả khi ứng dụng bị chiếm.</td></tr>
+<tr><td>3</td><td>Không publish cổng MySQL, phpMyAdmin, Loki</td><td>Port mapping</td><td>Chỉ truy cập được từ trong mạng Docker hoặc qua Nginx đã xác thực TLS.</td></tr>
+<tr><td>4</td><td>Prometheus bind <code>127.0.0.1:9090</code></td><td>Prometheus</td><td>Chỉ truy vấn được từ chính máy chủ hoặc qua SSH tunnel, không lộ ra mạng LAN.</td></tr>
+<tr><td>5</td><td>Ba tài khoản CSDL riêng, quyền tối thiểu</td><td>MySQL</td><td>Giới hạn thiệt hại khi lộ một bộ thông tin đăng nhập; exporter bị giới hạn 3 kết nối.</td></tr>
+<tr><td>6</td><td><code>DISALLOW_FILE_EDIT</code></td><td>WordPress</td><td>Loại bỏ trình soạn mã trong dashboard — đường duy trì truy cập của kẻ tấn công.</td></tr>
+<tr><td>7</td><td><code>FORCE_SSL_ADMIN</code>, HSTS</td><td>WordPress, Nginx</td><td>Không cho phép đăng nhập/cookie quản trị đi qua kênh không mã hoá.</td></tr>
+<tr><td>8</td><td><code>server_tokens off</code></td><td>Nginx</td><td>Không tiết lộ phiên bản phần mềm để đối chiếu lỗ hổng đã biết.</td></tr>
+<tr><td>9</td><td>TLS 1.2/1.3, tắt session ticket</td><td>Nginx</td><td>Loại bỏ giao thức lỗi thời; session ticket tắt để giảm nguy cơ lộ khoá phiên.</td></tr>
+<tr><td>10</td><td>Bí mật tách khỏi mã nguồn</td><td>Toàn dự án</td><td><code>.env</code> quyền 600, <code>.gitignore</code> chặn commit; CI quét mẫu bí mật.</td></tr>
+<tr><td>11</td><td>Giới hạn log 10 MB × 3 tệp</td><td>Toàn bộ container</td><td>Chống tấn công làm đầy ổ đĩa qua ghi log (log flooding).</td></tr>
+<tr><td>12</td><td><code>restart: unless-stopped</code> + healthcheck</td><td>Toàn bộ dịch vụ</td><td>Tự phục hồi sau sự cố; giảm thời gian gián đoạn.</td></tr>
+</table>
+
+<p>Với lớp ứng dụng, WordPress được cấu hình để người dùng quản trị đặt mật khẩu mạnh và không dùng tên đăng nhập mặc định <code>admin</code>. Tài khoản quản trị được sinh ngẫu nhiên trong <code>.env</code> và giá trị không xuất hiện trong báo cáo hay log. Với lớp mạng, chỉ hai cổng 80 và 443 được mở ra ngoài; mọi dịch vụ khác chỉ liên lạc trong mạng nội bộ Docker.</p>
+
+<p>Một điểm cần nêu thẳng thắn: hệ thống dùng chứng chỉ tự ký nên trình duyệt sẽ cảnh báo khi truy cập. Trong môi trường học tập điều này chấp nhận được, nhưng khi triển khai thật cần thay bằng chứng chỉ từ tổ chức cấp phát (Let's Encrypt hoặc chứng chỉ thương mại). Script <code>generate-certs.sh</code> được viết tách riêng để việc thay thế chỉ là thay hai tệp trong <code>nginx/certs/</code> và khởi động lại Nginx.</p>
+
+<h2>3.3. Sao lưu và phục hồi</h2>
+
+<p>Dữ liệu cần bảo vệ gồm hai phần: cơ sở dữ liệu (nội dung sản phẩm, tài khoản, cấu hình) và thư mục <code>wp-content</code> (ảnh sản phẩm, giao diện, plugin). Script <code>scripts/backup.sh</code> xử lý cả hai trong một lần chạy.</p>
+
+<p>Với cơ sở dữ liệu, <code>mysqldump</code> được gọi với <code>--single-transaction</code> để tạo bản sao nhất quán mà không khoá bảng — website vẫn phục vụ khách trong lúc sao lưu. Các tham số <code>--routines --triggers --events</code> bảo đảm không bỏ sót thủ tục, trigger và sự kiện định kỳ:</p>
+
+<pre>
+docker exec de3-mysql sh -c \
+  'exec mysqldump -uroot -p"$MYSQL_ROOT_PASSWORD" \
+     --single-transaction --quick --routines --triggers --events \
+     "$MYSQL_DATABASE"' | gzip -9 &gt; "$DB_FILE"
+chmod 600 "$DB_FILE"
+</pre>
+
+<p>Với thư mục upload, script dùng một container phụ trợ gắn volume ở chế độ chỉ đọc và chạy bằng chính uid của người triển khai, nhờ đó tệp nén thuộc đúng chủ sở hữu thay vì root (sự cố số 5 trong Bảng 2.3). Chính sách lưu giữ là bảy bản gần nhất cho mỗi loại, bản cũ hơn bị xoá tự động để không làm đầy ổ đĩa.</p>
+
+<p>Kết quả chạy thực tế tại thời điểm nghiệm thu:</p>
+
+<pre>
+-rw------- 1 thinh thinh  20K Oct 25 10:40 db_shop_db_2026-10-25_104056.sql.gz
+-rw------- 1 thinh thinh  13M Oct 25 10:40 wpdata_2026-10-25_104056.tar.gz
+</pre>
+
+<p>Tệp cơ sở dữ liệu nhỏ vì website mới có nội dung mẫu; tệp <code>wpdata</code> 13 MB chủ yếu là mã nguồn WordPress, giao diện và thư viện, phần nội dung thật sẽ tăng dần theo ảnh sản phẩm được tải lên. Cả hai tệp có quyền 600, chỉ người triển khai đọc được.</p>
+
+<p>Script <code>scripts/restore.sh</code> thực hiện chiều ngược lại: giải nén thư mục upload vào volume, sau đó nạp bản dump vào MySQL. Quy trình phục hồi được khuyến nghị gồm bốn bước: dừng WordPress để không có ghi mới, phục hồi dữ liệu, khởi động lại và chạy <code>healthcheck.sh</code> để xác nhận. Việc lên lịch được thực hiện bằng cron trên máy chủ:</p>
+
+<pre>
+# Sao lưu hằng ngày lúc 02:00
+0 2 * * * cd /home/thinh/de3-wordpress-quangba &amp;&amp; ./scripts/backup.sh &gt;&gt; backups/backup.log 2&gt;&amp;1
+</pre>
+
+<p>Để bảo vệ trước sự cố mất toàn bộ máy ảo, bản sao lưu cần được đồng bộ ra ngoài. Trong phạm vi học phần, điều này được nêu như khuyến nghị vận hành (đồng bộ lên máy chủ lưu trữ khác hoặc dịch vụ đối tượng) chứ chưa triển khai, vì máy ảo chỉ có một ổ đĩa 20 GB.</p>
+
+<!-- ==================== PHẦN 4 ==================== -->
+<h1>PHẦN 4: GIÁM SÁT VÀ THU THẬP LOG TẬP TRUNG</h1>
+
+<h2>4.1. Prometheus và các chỉ số thu thập</h2>
+
+<p>Prometheus hoạt động theo mô hình kéo (pull): định kỳ gọi endpoint <code>/metrics</code> của từng mục tiêu, lưu kết quả dưới dạng chuỗi thời gian và cho phép truy vấn bằng PromQL. Hệ thống cấu hình bốn job thu thập, mỗi job đại diện một lớp thông tin khác nhau:</p>
+
+<table>
+<caption>Bảng 4.1. Các mục tiêu Prometheus thu thập</caption>
+<tr><th style="width:24%">Job</th><th style="width:28%">Endpoint</th><th>Nhóm chỉ số</th></tr>
+<tr><td>prometheus</td><td>localhost:9090</td><td>Sức khoẻ bản thân Prometheus, số mẫu đã thu, thời gian scrape.</td></tr>
+<tr><td>node-exporter</td><td>node-exporter:9100</td><td>CPU theo từng chế độ, bộ nhớ, dung lượng và inode ổ đĩa, lưu lượng mạng, tải hệ thống.</td></tr>
+<tr><td>mysqld-exporter</td><td>mysqld-exporter:9104</td><td>Số kết nối, số truy vấn, bộ đệm, khoá, tình trạng replication.</td></tr>
+<tr><td>loki</td><td>loki:3100</td><td>Sức khoẻ Loki, số luồng log đang quản lý, tốc độ nhận log.</td></tr>
+</table>
+
+<p>Thời gian lưu trữ được đặt 15 ngày (<code>--storage.tsdb.retention.time=15d</code>), đủ để so sánh xu hướng theo tuần mà vẫn phù hợp ổ đĩa 20 GB. Dữ liệu nằm trong volume <code>prometheus_data</code> nên không mất khi tạo lại container.</p>
+
+<p>Ngoài việc thu thập, Prometheus đánh giá tám quy tắc cảnh báo chia ba nhóm, giúp phát hiện sự cố trước khi người dùng phản ánh:</p>
+
+<table>
+<caption>Bảng 4.2. Các quy tắc cảnh báo</caption>
+<tr><th style="width:20%">Nhóm</th><th style="width:32%">Cảnh báo</th><th>Điều kiện kích hoạt</th></tr>
+<tr><td rowspan="2">availability</td><td>TargetDown</td><td>Một mục tiêu không scrape được quá 1 phút (<code>up == 0</code>).</td></tr>
+<tr><td>PrometheusConfigReloadFailed</td><td>Nạp lại cấu hình thất bại — cấu hình mới không có hiệu lực.</td></tr>
+<tr><td rowspan="3">host-resources</td><td>HighCpuUsage</td><td>CPU trung bình 5 phút vượt 85%.</td></tr>
+<tr><td>HighMemoryUsage</td><td>RAM khả dụng dưới 10% trong 10 phút.</td></tr>
+<tr><td>LowDiskSpace</td><td>Dung lượng trống dưới 15%.</td></tr>
+<tr><td rowspan="3">application</td><td>MySQLDown</td><td>Không thu được chỉ số MySQL trong 1 phút.</td></tr>
+<tr><td>MySQLTooManyConnections</td><td>Số kết nối vượt 80% giới hạn <code>max_connections</code>.</td></tr>
+<tr><td>MySQLSlowQueriesIncreasing</td><td>Tốc độ truy vấn chậm tăng liên tục — dấu hiệu thiếu chỉ mục.</td></tr>
+</table>
+
+<p>Các quy tắc được kiểm tra cú pháp bằng <code>promtool check rules</code> trong pipeline CI, và ở thời điểm nghiệm thu cả tám cảnh báo đều ở trạng thái <code>inactive</code> — nghĩa là hệ thống đang khoẻ mạnh và bộ quy tắc đã nạp thành công. Ngưỡng cảnh báo được chọn theo kinh nghiệm vận hành: cảnh báo quá nhạy sẽ gây mỏi mệt và bị bỏ qua, quá trễ thì mất tác dụng.</p>
+
+<h2>4.2. Grafana và dashboard</h2>
+
+<p>Grafana là lớp trực quan hoá, kết nối tới Prometheus cho số liệu và Loki cho log. Điểm quan trọng về mặt quản trị là toàn bộ cấu hình được <b>provisioning</b> — nghĩa là datasource và dashboard được khai báo bằng tệp YAML/JSON và nạp tự động khi khởi động, không phải tạo tay qua giao diện. Nhờ đó, dựng lại hệ thống trên máy khác chỉ cần chạy lại stack là có đủ dashboard, không phụ thuộc vào thao tác thủ công của một cá nhân.</p>
+
+<pre>
+datasources:
+  - name: Prometheus
+    uid: prometheus-main
+    type: prometheus
+    url: http://prometheus:9090
+    isDefault: true
+  - name: Loki
+    uid: loki-main
+    type: loki
+    url: http://loki:3100
+</pre>
+
+<p>UID được cố định (<code>prometheus-main</code>, <code>loki-main</code>) thay vì để Grafana sinh ngẫu nhiên. Lý do xuất phát từ sự cố số 4: tệp JSON của dashboard tham chiếu datasource theo UID, nếu UID thay đổi giữa các lần dựng lại thì mọi panel sẽ báo lỗi "data source not found". Đặt UID cố định biến dashboard thành tệp cấu hình thực sự có thể tái sử dụng.</p>
+
+<p>Dashboard <b>"De 3 - Tong quan he thong"</b> gồm bảy panel, tự làm mới mỗi 30 giây:</p>
+
+<table>
+<caption>Bảng 4.3. Các panel của dashboard</caption>
+<tr><th style="width:5%">#</th><th style="width:30%">Panel</th><th>Chỉ số và ngưỡng màu</th></tr>
+<tr><td>1</td><td>CPU sử dụng</td><td><code>100 - avg(rate(node_cpu_seconds_total{mode="idle"}[5m])) * 100</code>; xanh &lt; 70%, cam 70–85%, đỏ &gt; 85%.</td></tr>
+<tr><td>2</td><td>RAM sử dụng</td><td><code>(1 - MemAvailable/MemTotal) * 100</code>; cam từ 80%, đỏ từ 90%.</td></tr>
+<tr><td>3</td><td>Ổ đĩa còn trống</td><td>Tỉ lệ <code>filesystem_avail / filesystem_size</code> của <code>/</code>; đỏ dưới 15%.</td></tr>
+<tr><td>4</td><td>CPU &amp; RAM theo thời gian</td><td>Hai chuỗi thời gian cùng trục phần trăm để thấy tương quan khi tải tăng.</td></tr>
+<tr><td>5</td><td>MySQL — kết nối &amp; truy vấn/giây</td><td><code>mysql_global_status_threads_connected</code> và <code>rate(mysql_global_status_queries[5m])</code>.</td></tr>
+<tr><td>6</td><td>Lưu lượng mạng</td><td>Tốc độ nhận byte theo giao diện mạng, loại trừ <code>lo</code> và các giao diện ảo của Docker.</td></tr>
+<tr><td>7</td><td>Log Nginx (Loki)</td><td>Truy vấn LogQL <code>{container="de3-nginx"}</code>, hiển thị log mới nhất ở trên.</td></tr>
+</table>
+
+<p>Panel thứ bảy là điểm nối giữa hai hệ thống giám sát: cùng một màn hình vừa có số liệu định lượng (CPU, RAM) vừa có log định tính. Khi CPU tăng đột biến, người quản trị đọc ngay được dòng log tương ứng để biết đó là do lượng truy cập thật hay do một yêu cầu bất thường.</p>
+
+<p>Grafana được cấu hình chạy sau đường dẫn con <code>/grafana/</code> với <code>GF_SERVER_ROOT_URL</code> và <code>GF_SERVER_SERVE_FROM_SUB_PATH=true</code>. Ba thiết lập bảo mật được bật: tắt đăng ký tự do (<code>GF_USERS_ALLOW_SIGN_UP=false</code>), tắt truy cập ẩn danh (<code>GF_AUTH_ANONYMOUS_ENABLED=false</code>) và tắt gửi số liệu phân tích (<code>GF_ANALYTICS_REPORTING_ENABLED=false</code>). Như vậy chỉ tài khoản quản trị trong <code>.env</code> mới xem được dashboard.</p>
+
+<h2>4.3. Thu thập log tập trung với Loki và Promtail</h2>
+
+<p>Loki đóng vai trò tương tự Prometheus nhưng cho log: thay vì đánh chỉ mục toàn bộ nội dung log (tốn dung lượng và bộ nhớ như Elasticsearch), Loki chỉ đánh chỉ mục theo nhãn và lưu phần nội dung dưới dạng khối nén. Cách tiếp cận này phù hợp với máy ảo 4 GB RAM, đổi lại truy vấn nội dung chậm hơn một chút so với tìm kiếm toàn văn.</p>
+
+<p>Cấu hình Loki dùng schema phiên bản 13 với chỉ mục <code>tsdb</code>, lưu trữ trên hệ thống tệp trong volume <code>loki_data</code>, thời gian giữ 168 giờ (bảy ngày) và bật compactor để dọn dữ liệu cũ đúng hạn. Mức bảy ngày được chọn để đủ điều tra sự cố trong một chu kỳ vận hành mà không chiếm quá nhiều đĩa.</p>
+
+<p>Promtail là agent chạy trên máy chủ, đọc log của container qua Docker API. Thay vì liệt kê cứng từng container, cấu hình dùng cơ chế khám phá động <code>docker_sd_configs</code> và lọc theo nhãn dự án:</p>
+
+<pre>
+scrape_configs:
+  - job_name: docker
+    docker_sd_configs:
+      - host: unix:///var/run/docker.sock
+    relabel_configs:
+      - source_labels: ['__meta_docker_container_label_com_docker_compose_project']
+        regex: 'de3-wordpress'
+        action: keep
+      - source_labels: ['__meta_docker_container_name']
+        regex: '/(.*)'
+        target_label: 'container'
+      - source_labels: ['__meta_docker_container_label_com_docker_compose_service']
+        target_label: 'service'
+      - source_labels: ['__meta_docker_container_label_com_docker_compose_project']
+        target_label: 'project'
+</pre>
+
+<p>Nhãn <code>keep</code> đảm bảo chỉ log của dự án <code>de3-wordpress</code> được thu, không lẫn log hệ thống của các container khác trên máy. Ba nhãn <code>container</code>, <code>service</code>, <code>project</code> tạo thành hệ toạ độ để truy vấn: theo tên container cụ thể, theo loại dịch vụ, hoặc toàn bộ dự án.</p>
+
+<p>LogQL là ngôn ngữ truy vấn của Loki, kết hợp chọn luồng (stream selector) trong ngoặc nhọn với bộ lọc chuỗi và hàm tổng hợp. Một số truy vấn đã dùng trong quá trình kiểm chứng:</p>
+
+<table>
+<caption>Bảng 4.4. Các truy vấn LogQL tiêu biểu</caption>
+<tr><th style="width:47%">Truy vấn</th><th>Mục đích</th></tr>
+<tr><td><code>{container="de3-nginx"}</code></td><td>Xem toàn bộ log truy cập Nginx.</td></tr>
+<tr><td><code>{container="de3-nginx"} |= " 500 "</code></td><td>Lọc các phản hồi lỗi máy chủ để điều tra.</td></tr>
+<tr><td><code>{container="de3-nginx"} |~ " 4[0-9][0-9] "</code></td><td>Tìm lỗi phía người dùng (404, 403…) bằng biểu thức chính quy.</td></tr>
+<tr><td><code>sum by (container) (rate({project="de3-wordpress"}[5m]))</code></td><td>Đếm số dòng log mỗi giây theo container — phát hiện container ghi log bất thường.</td></tr>
+<tr><td><code>{container="de3-nginx"} |= "rt=" | pattern "&lt;_&gt; rt=&lt;rt&gt;"</code></td><td>Trích thời gian xử lý từ định dạng log tuỳ biến để phân tích độ trễ.</td></tr>
+</table>
+
+<p>Vì image Promtail không có sẵn <code>wget</code> hay <code>curl</code>, việc kiểm chứng Loki được thực hiện qua API proxy của Grafana (<code>/api/datasources/proxy/uid/loki-main/loki/api/v1/...</code>). Cách này còn có ưu điểm dùng đúng đường đi mà người vận hành thật sẽ dùng. Kết quả kiểm chứng cho thấy Loki trả về danh sách nhãn đầy đủ và truy vấn <code>{container="de3-nginx"}</code> trả về các dòng log thật của Nginx, xác nhận toàn bộ chuỗi Promtail → Loki → Grafana hoạt động thông suốt.</p>
+
+<h2>4.4. Đánh giá hệ thống giám sát và kết quả nghiệm thu</h2>
+
+<p>Bảng 4.5 tổng hợp kết quả đo trực tiếp trên máy ảo tại thời điểm nghiệm thu ngày 25/10/2026, sau khi hệ thống chạy ổn định.</p>
+
+<table>
+<caption>Bảng 4.5. Kết quả nghiệm thu</caption>
+<tr><th style="width:5%">#</th><th style="width:33%">Hạng mục</th><th>Kết quả</th></tr>
+<tr><td>1</td><td>Số container đang chạy</td><td>10/10 <code>Up</code>; MySQL, WordPress và Nginx ở trạng thái <code>healthy</code></td></tr>
+<tr><td>2</td><td>Cổng công bố</td><td>80, 443 (Nginx); 127.0.0.1:9090 (Prometheus) — các dịch vụ khác không publish cổng</td></tr>
+<tr><td>3</td><td>Website</td><td><code>https://shop.local/</code> → 200; <code>/wp-admin/</code> → 302 (chuyển tới đăng nhập)</td></tr>
+<tr><td>4</td><td>Chuyển hướng HTTP → HTTPS</td><td>301, đúng như thiết kế</td></tr>
+<tr><td>5</td><td>phpMyAdmin</td><td><code>/phpmyadmin/</code> → 200</td></tr>
+<tr><td>6</td><td>Grafana</td><td><code>/grafana/login</code> → 200, phiên bản 13.2.2</td></tr>
+<tr><td>7</td><td>Prometheus targets</td><td>4/4 <code>up</code> (prometheus, node-exporter, mysqld-exporter, loki)</td></tr>
+<tr><td>8</td><td>Quy tắc cảnh báo</td><td>8 quy tắc đã nạp, tất cả <code>inactive</code></td></tr>
+<tr><td>9</td><td>PromQL — CPU</td><td>≈ 39–43% (2 vCPU)</td></tr>
+<tr><td>10</td><td>PromQL — RAM</td><td>≈ 58,7% trên 4,1 GB</td></tr>
+<tr><td>11</td><td>PromQL — kết nối MySQL</td><td>2 kết nối đang mở</td></tr>
+<tr><td>12</td><td>LogQL</td><td><code>{container="de3-nginx"}</code> trả về log thật, nhãn <code>container/service/project</code> đầy đủ</td></tr>
+<tr><td>13</td><td>Sao lưu</td><td><code>db_shop_db_*.sql.gz</code> (20 KB) và <code>wpdata_*.tar.gz</code> (13 MB), quyền 600</td></tr>
+<tr><td>14</td><td>Kết quả script kiểm tra</td><td><code>KET QUA: TAT CA DAT</code></td></tr>
+</table>
+
+<p>Về hiệu năng, mức dùng CPU 39–43% và RAM 58,7% cho thấy hệ thống còn dư địa nhưng không thoải mái: mười container trên 4,1 GB RAM là cấu hình sát ngưỡng hợp lý. Nếu tăng thêm thành phần (ví dụ WooCommerce cùng các bảng dữ liệu lớn), cần nâng RAM lên 8 GB hoặc giảm thời gian lưu chỉ số. Đây là đánh giá định lượng có được nhờ dữ liệu Prometheus, minh hoạ đúng giá trị của giám sát: quyết định nâng cấp dựa trên số đo chứ không dựa trên cảm nhận.</p>
+
+<p>Hệ thống giám sát hiện tại có ba ưu điểm: (i) phủ đủ ba lớp hạ tầng – hệ điều hành – ứng dụng; (ii) cấu hình hoàn toàn bằng mã nên tái lập được; (iii) log và metric cùng hiển thị trên một dashboard. Hạn chế cần nêu: chưa có kênh gửi cảnh báo tự động (email, Telegram) nên quy tắc cảnh báo hiện chỉ hiển thị trong Prometheus/Grafana mà chưa đẩy thông báo tới người vận hành; chưa có dashboard riêng cho Loki để phân tích xu hướng log dài hạn; và các chỉ số về trải nghiệm người dùng (thời gian tải trang phía client) chưa được thu thập. Ba hạn chế này được đưa vào hướng phát triển.</p>
+
+<!-- ==================== KẾT LUẬN ==================== -->
+<h1>KẾT LUẬN VÀ HƯỚNG PHÁT TRIỂN</h1>
+
+<p>Báo cáo đã trình bày quá trình xây dựng và triển khai hoàn chỉnh hệ thống Website Quảng bá Sản phẩm bằng WordPress trên máy ảo Ubuntu 18.04.6 LTS, đáp ứng đầy đủ các yêu cầu của Đề 3. Hệ thống gồm mười container chạy trên ba vùng mạng được cách ly, sáu volume lưu trữ bền vững, một reverse proxy Nginx chấm dứt TLS cho ba dịch vụ web, cùng bộ công cụ giám sát Prometheus – Grafana – Loki – Promtail. Toàn bộ cấu hình nằm trong kho Git với pipeline CI kiểm tra sáu bước.</p>
+
+<p>Kết quả chính đạt được:</p>
+<ul>
+<li><b>Website hoạt động đầy đủ</b>: trang công khai trả về 200 qua HTTPS, trang quản trị yêu cầu đăng nhập đúng thiết kế, HTTP tự chuyển hướng sang HTTPS.</li>
+<li><b>Kiến trúc tách biệt rõ ràng</b>: tầng dữ liệu nằm trong mạng <code>internal</code> không có route ra Internet; chỉ Nginx mở cổng 80/443; Prometheus chỉ bind trên localhost.</li>
+<li><b>Quản trị cơ sở dữ liệu an toàn</b>: MySQL 8.0 với utf8mb4, ba tài khoản phân quyền tối thiểu, phpMyAdmin truy cập qua Nginx.</li>
+<li><b>Giám sát đầy đủ hai trụ cột</b>: 4/4 mục tiêu Prometheus hoạt động, 8 quy tắc cảnh báo đã nạp, dashboard 7 panel tự làm mới 30 giây, log Nginx truy vấn được bằng LogQL.</li>
+<li><b>Vận hành có kỷ luật</b>: script kiểm tra sức khoẻ tự động, sao lưu hằng ngày giữ 7 bản, quy trình rollback dựa trên Git và volume.</li>
+</ul>
+
+<p>Giá trị lớn nhất của quá trình thực hiện không nằm ở việc hệ thống chạy được, mà ở năm sự cố thực tế đã gặp và khắc phục (Bảng 2.3). Mỗi sự cố để lại một bài học cụ thể: <code>mysql -t</code> kiểm tra được cú pháp trước khi triển khai; Nginx giữ DNS cũ khi container được tạo lại; image mới có thể bỏ tham số cũ mà không báo trước; quyền truy cập tệp phải khớp với user chạy trong container. Đây là những kinh nghiệm không có trong tài liệu hướng dẫn và chỉ xuất hiện khi triển khai trên môi trường thật.</p>
+
+<p><b>Hướng phát triển</b> được xác định từ các hạn chế đã nêu:</p>
+<ol>
+<li><b>Bổ sung kênh cảnh báo tự động</b>: cấu hình Alertmanager gửi thông báo qua email hoặc Telegram khi có cảnh báo nghiêm trọng, kèm cơ chế im lặng (silence) khi bảo trì.</li>
+<li><b>Mở rộng nội dung sản phẩm</b>: cài WooCommerce để có danh mục, giỏ hàng và thanh toán; hoặc xây dựng kiểu nội dung tuỳ biến (custom post type) cho sản phẩm với các trường giá, bảo hành, thông số.</li>
+<li><b>Tự động hoá triển khai</b>: bổ sung job CD trong GitHub Actions kết nối SSH tới máy ảo để pull code và chạy <code>deploy.sh</code> khi nhánh chính thay đổi.</li>
+<li><b>Tăng cường bảo mật nâng cao</b>: thay chứng chỉ tự ký bằng Let's Encrypt với tự động gia hạn, bật WAF (ModSecurity hoặc fail2ban) chặn quét cổng và dò mật khẩu, bổ sung sao lưu ra ngoài máy ảo.</li>
+<li><b>Trực quan hoá log nâng cao</b>: tạo dashboard Loki riêng hiển thị tỉ lệ mã phản hồi HTTP theo thời gian, các endpoint chậm và lưu lượng theo giờ, phục vụ phân tích hành vi người dùng.</li>
+<li><b>Mở rộng quy mô</b>: khi lưu lượng tăng, có thể nâng lên 8 GB RAM và tách máy chủ giám sát khỏi máy chủ ứng dụng, đúng mô hình mà ba vùng mạng đã chuẩn bị sẵn về mặt logic.</li>
+</ol>
+
+<p>Nhìn tổng thể, đề tài đã hoàn thành mục tiêu trở thành một hệ thống hoàn chỉnh ở mức có thể vận hành thật: tái lập được bằng một lệnh, quan sát được bằng dashboard, bảo vệ được bằng nhiều lớp cấu hình và có đường lùi khi xảy ra sự cố. Đó cũng là nội dung cốt lõi của học phần Triển khai và Quản trị Hệ thống Phần mềm.</p>
+
+<!-- ==================== TÀI LIỆU THAM KHẢO ==================== -->
+<h1>TÀI LIỆU THAM KHẢO</h1>
+
+<p class="noindent" style="text-indent: -0.9cm; padding-left: 0.9cm;">[1] Docker Inc., <i>Docker Compose file reference</i>. https://docs.docker.com/compose/compose-file/ (truy cập 25/10/2026).</p>
+<p class="noindent" style="text-indent: -0.9cm; padding-left: 0.9cm;">[2] Docker Inc., <i>Docker networking — bridge drivers and internal networks</i>. https://docs.docker.com/network/ (truy cập 25/10/2026).</p>
+<p class="noindent" style="text-indent: -0.9cm; padding-left: 0.9cm;">[3] Nginx Inc., <i>NGINX documentation: reverse proxy, SSL/TLS, resolver</i>. https://nginx.org/en/docs/ (truy cập 25/10/2026).</p>
+<p class="noindent" style="text-indent: -0.9cm; padding-left: 0.9cm;">[4] WordPress.org, <i>WordPress documentation: Installation, wp-config.php, Database description</i>. https://wordpress.org/documentation/ (truy cập 25/10/2026).</p>
+<p class="noindent" style="text-indent: -0.9cm; padding-left: 0.9cm;">[5] Oracle, <i>MySQL 8.0 Reference Manual: Security, Authentication plugins, mysqldump</i>. https://dev.mysql.com/doc/refman/8.0/en/ (truy cập 25/10/2026).</p>
+<p class="noindent" style="text-indent: -0.9cm; padding-left: 0.9cm;">[6] Prometheus Authors, <i>Prometheus documentation: Configuration, PromQL, Alerting rules</i>. https://prometheus.io/docs/ (truy cập 25/10/2026).</p>
+<p class="noindent" style="text-indent: -0.9cm; padding-left: 0.9cm;">[7] Grafana Labs, <i>Grafana documentation: Provisioning, Data sources, Dashboard JSON model</i>. https://grafana.com/docs/grafana/latest/ (truy cập 25/10/2026).</p>
+<p class="noindent" style="text-indent: -0.9cm; padding-left: 0.9cm;">[8] Grafana Labs, <i>Loki documentation: Configuration, LogQL, Promtail docker_sd_configs</i>. https://grafana.com/docs/loki/latest/ (truy cập 25/10/2026).</p>
+<p class="noindent" style="text-indent: -0.9cm; padding-left: 0.9cm;">[9] OWASP Foundation, <i>OWASP Top 10 — 2021</i>. https://owasp.org/Top10/ (truy cập 25/10/2026).</p>
+<p class="noindent" style="text-indent: -0.9cm; padding-left: 0.9cm;">[10] OWASP Foundation, <i>OWASP Docker Security Cheat Sheet</i>. https://cheatsheetseries.owasp.org/ (truy cập 25/10/2026).</p>
+<p class="noindent" style="text-indent: -0.9cm; padding-left: 0.9cm;">[11] GitHub, <i>GitHub Actions documentation: Workflow syntax, jobs, steps</i>. https://docs.github.com/en/actions (truy cập 25/10/2026).</p>
+<p class="noindent" style="text-indent: -0.9cm; padding-left: 0.9cm;">[12] Canonical, <i>Ubuntu Server Guide — Ubuntu 18.04 LTS</i>. https://ubuntu.com/server/docs (truy cập 25/10/2026).</p>
+
+</body>
+</html>
