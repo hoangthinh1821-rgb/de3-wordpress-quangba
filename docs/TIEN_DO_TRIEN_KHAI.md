@@ -12,6 +12,7 @@ Cập nhật lần cuối: 25/10/2026
 | Grafana | 13.2.2, dashboard `De 3 - Tong quan he thong` (7 panel) |
 | Loki / Promtail | Log Nginx truy vấn được bằng `{container="de3-nginx"}` |
 | Sao lưu | `backups/db_shop_db_*.sql.gz` + `wpdata_*.tar.gz`, giữ 7 bản |
+| Giao diện website | Theme riêng `annhien`: 3 trang, 5 sản phẩm, menu, favicon; đã kiểm tra ở desktop/tablet/mobile |
 | Báo cáo | `BaoCao_De3_WordPress_QuangBa.docx` (30 trang) và `.pdf` |
 | Repo GitHub | **Chưa tạo** — việc còn lại của người thực hiện |
 
@@ -36,7 +37,8 @@ docker compose up -d --build
 ```
 
 Dựng lại từ đầu (mất dữ liệu): `docker compose down -v` → `./scripts/init-env.sh` →
-`./scripts/generate-certs.sh` → `docker compose up -d --build` → `./scripts/install-wordpress.sh`.
+`./scripts/generate-certs.sh` → `docker compose up -d --build` → `./scripts/install-wordpress.sh` →
+`./scripts/seed-content.sh`.
 
 ## 3. Truy cập
 
@@ -69,7 +71,7 @@ grep -E 'WP_ADMIN|GRAFANA_ADMIN|MYSQL_USER|READONLY' ~/de3-wordpress-quangba/.en
 
    ```bash
    cd "/c/Users/hoang/OneDrive/Máy tính/TK&QTHT/De3_WordPress_QuangBa"
-   git remote add origin https://github.com/<tài-khoản>/de3-wordpress-quangba.git
+   git remote add origin git@github.com:hoangthinh1821-rgb/de3-wordpress-quangba.git
    git branch -M main
    git push -u origin main
    ```
@@ -82,3 +84,11 @@ grep -E 'WP_ADMIN|GRAFANA_ADMIN|MYSQL_USER|READONLY' ~/de3-wordpress-quangba/.en
   (tự sinh OOXML; Word chỉ dùng để cập nhật mục lục và xuất PDF).
 - Ba lỗi đã gặp và đã sửa được ghi trong báo cáo, Bảng 2.3 — đọc lại khi cần chẩn đoán.
 - `.env`, khoá TLS và `mysqld-exporter/.my.cnf` bị `.gitignore` chặn; không commit tay các tệp này.
+- Website dùng theme riêng `annhien` (bind-mount read-only từ `wordpress/themes/annhien`).
+  Nội dung mẫu nằm trong `wordpress/content/*.html`; `scripts/seed-content.sh` nạp lại
+  trang, sản phẩm, menu và cấu hình — chạy lại nhiều lần vẫn an toàn.
+- Permalink `/%postname%/` cần `.htaccess` và Apache `AllowOverride All`; cấu hình này
+  được mount từ `wordpress/apache/allowoverride.conf` vì image chính thức đặt
+  `AllowOverride None`. Script seed tự ghi `.htaccess` chuẩn của WordPress.
+- WP-CLI được cài trong container lúc chạy script seed, nên sau khi tạo lại container
+  chỉ cần chạy lại `./scripts/seed-content.sh`.

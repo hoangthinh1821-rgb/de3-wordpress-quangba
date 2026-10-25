@@ -62,6 +62,9 @@ nano .env          # đổi toàn bộ mật khẩu
 
 chmod +x scripts/*.sh
 ./scripts/deploy.sh
+
+./scripts/install-wordpress.sh   # cài WordPress qua HTTP, tạo admin trong .env
+./scripts/seed-content.sh        # nạp theme, trang giới thiệu, sản phẩm và menu
 ```
 
 Trỏ tên miền trong file `hosts` của máy khách:
@@ -79,6 +82,22 @@ Truy cập:
 | phpMyAdmin | https://shop.local/phpmyadmin/ |
 | Grafana | https://shop.local/grafana/ |
 | Prometheus | http://127.0.0.1:9090 (qua SSH tunnel) |
+
+### 3.1 Giao diện và nội dung
+
+Website dùng theme riêng **annhien** — classic theme, không cần plugin:
+
+- `wordpress/themes/annhien/` được bind-mount read-only vào `wp-content/themes/annhien`.
+  Sửa tệp trên máy thật là có hiệu lực ngay ở lần tải trang kế tiếp (PHP đọc lại mỗi request).
+- `wordpress/content/*.html` chứa nội dung 3 trang (Trang chủ, Câu chuyện, Liên hệ) và
+  5 sản phẩm. `scripts/seed-content.sh` đọc các tệp này để tạo/cập nhật bài viết, menu và
+  cấu hình site; chạy lại nhiều lần vẫn an toàn.
+- Sản phẩm là kiểu nội dung tuỳ biến `san_pham` với các trường giá, trọng lượng, độ rang,
+  hương vị và ảnh. Ảnh minh hoạ là SVG trong `assets/img/`.
+- Favicon `.ico` do Nginx phục vụ trực tiếp từ `nginx/static/`, không đi qua WordPress.
+
+Quy trình sửa nội dung: sửa tệp trong `wordpress/content/` → chạy lại
+`./scripts/seed-content.sh` → tải lại trang.
 
 ## 4. Bảo mật đã áp dụng
 
@@ -140,13 +159,15 @@ rate({container="de3-nginx"}[1m])
 .
 ├── docker-compose.yml
 ├── .env.example
-├── nginx/            Dockerfile, nginx.conf, template reverse proxy
+├── wordpress/        theme annhien + nội dung mẫu (HTML)
+├── nginx/            Dockerfile, nginx.conf, template reverse proxy, static/favicon.ico
 ├── mysql/            my.cnf + script tạo user lúc khởi tạo
 ├── prometheus/       prometheus.yml + rules/alerts.yml
 ├── grafana/          provisioning datasource + dashboard
 ├── loki/             loki-config.yml
 ├── promtail/         promtail-config.yml
-├── scripts/          deploy, certs, backup, restore, healthcheck
+├── scripts/          deploy, certs, install, seed, backup, restore, healthcheck
+├── docs/             nguồn báo cáo + tiến độ triển khai
 └── .github/workflows/ci.yml
 ```
 

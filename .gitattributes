@@ -9,3 +9,6 @@ Dockerfile    text eol=lf
 *.cnf         text eol=lf
 *.key         -text
 *.crt         -text
+
+# Favicon nhi phan
+*.ico         -text

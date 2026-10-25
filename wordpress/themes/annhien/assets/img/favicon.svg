@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="An Nhiên">
+  <rect width="64" height="64" rx="15" fill="#201a16"/>
+  <ellipse cx="32" cy="32" rx="15" ry="20" transform="rotate(-24 32 32)" fill="#f3e7d7"/>
+  <path d="M25 20c6 8 8 16 3 25" fill="none" stroke="#201a16" stroke-width="3.6" stroke-linecap="round"/>
+</svg>

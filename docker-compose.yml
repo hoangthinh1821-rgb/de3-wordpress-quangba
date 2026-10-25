@@ -35,6 +35,7 @@ services:
       SERVER_NAME: ${SERVER_NAME:-shop.local}
     volumes:
       - ./nginx/certs:/etc/nginx/certs:ro
+      - ./nginx/static:/etc/nginx/static:ro
       - nginx_logs:/var/log/nginx
     networks:
       - frontend
@@ -73,6 +74,10 @@ services:
         define('WP_AUTO_UPDATE_CORE', false);
     volumes:
       - wordpress_data:/var/www/html
+      # Theme tự viết, gắn trực tiếp từ mã nguồn để sửa là thấy ngay
+      - ./wordpress/themes/annhien:/var/www/html/wp-content/themes/annhien:ro
+      # Bật AllowOverride để .htaccess (permalink đẹp) có hiệu lực
+      - ./wordpress/apache/allowoverride.conf:/etc/apache2/conf-enabled/zz-allowoverride.conf:ro
     networks:
       - frontend
       - backend

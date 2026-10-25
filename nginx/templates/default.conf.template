@@ -63,6 +63,14 @@ server {
         return 200 "ok\n";
     }
 
+    # Favicon tĩnh do Nginx phục vụ (không đi qua WordPress)
+    location = /favicon.ico {
+        alias /etc/nginx/static/favicon.ico;
+        access_log off;
+        expires 7d;
+        add_header Cache-Control "public";
+    }
+
     # -----------------------------------------------------------------
     # 1) WordPress - toan bo website
     # -----------------------------------------------------------------

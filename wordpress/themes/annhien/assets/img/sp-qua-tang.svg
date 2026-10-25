@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 380" role="img" aria-label="Hộp quà tặng An Nhiên">
+  <ellipse cx="160" cy="352" rx="110" ry="15" fill="#e6d6be" opacity="0.8"/>
+  <rect x="60" y="176" width="200" height="152" rx="10" fill="#efe4d4"/>
+  <rect x="52" y="138" width="216" height="48" rx="10" fill="#a4552b"/>
+  <rect x="146" y="176" width="28" height="152" fill="#c97a4b"/>
+  <rect x="146" y="138" width="28" height="48" fill="#8a4421"/>
+  <g transform="translate(160 128)">
+    <ellipse cx="-24" cy="0" rx="24" ry="14" transform="rotate(-18)" fill="#8a4421"/>
+    <ellipse cx="24" cy="0" rx="24" ry="14" transform="rotate(18)" fill="#8a4421"/>
+    <circle r="9" fill="#7e3f1e"/>
+  </g>
+  <rect x="96" y="220" width="128" height="74" rx="8" fill="#fffaf2"/>
+  <text x="160" y="246" text-anchor="middle" font-family="Times New Roman, serif" font-size="10" letter-spacing="2.2" fill="#7e3f1e">AN NHIÊN</text>
+  <text x="160" y="268" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" font-weight="bold" letter-spacing="1" fill="#4a2e1f">QUÀ TẶNG</text>
+  <text x="160" y="284" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" letter-spacing="1.4" fill="#8a6a52">2 TÚI · 250g</text>
+</svg>

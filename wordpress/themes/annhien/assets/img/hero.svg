@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 560 560" role="img" aria-label="Ly cà phê rang mộc An Nhiên">
+  <circle cx="280" cy="276" r="238" fill="#f9f2e6"/>
+  <circle cx="280" cy="276" r="206" fill="none" stroke="#e8d8c1" stroke-width="1.5"/>
+  <ellipse cx="280" cy="404" rx="146" ry="26" fill="#e6d6be" opacity="0.75"/>
+
+  <path d="M360 286h20a38 38 0 0 1 0 76h-14" fill="none" stroke="#201a16" stroke-width="15" stroke-linecap="round"/>
+
+  <ellipse cx="280" cy="388" rx="142" ry="31" fill="#fffdf9" stroke="#201a16" stroke-width="3"/>
+  <ellipse cx="280" cy="382" rx="102" ry="18" fill="#efe2cf"/>
+
+  <path d="M198 254h164l-12 96a40 40 0 0 1-40 36h-60a40 40 0 0 1-40-36z" fill="#fffdf9" stroke="#201a16" stroke-width="3"/>
+  <ellipse cx="280" cy="254" rx="82" ry="17" fill="#6b3e26"/>
+  <ellipse cx="280" cy="254" rx="82" ry="17" fill="none" stroke="#201a16" stroke-width="3"/>
+  <ellipse cx="258" cy="250" rx="26" ry="6" fill="#8a5735" opacity="0.8"/>
+
+  <g fill="none" stroke="#b5653a" stroke-width="4" stroke-linecap="round" opacity="0.55">
+    <path d="M246 216c-12-16 12-24 0-40"/>
+    <path d="M280 208c-12-18 12-26 0-44"/>
+    <path d="M314 216c-12-16 12-24 0-40"/>
+  </g>
+
+  <g fill="#3d2a1d">
+    <ellipse cx="404" cy="452" rx="19" ry="13" transform="rotate(-26 404 452)"/>
+    <ellipse cx="150" cy="470" rx="18" ry="12" transform="rotate(22 150 470)"/>
+    <ellipse cx="194" cy="494" rx="15" ry="10" transform="rotate(-14 194 494)"/>
+  </g>
+  <g fill="none" stroke="#f3e7d7" stroke-width="2.4" stroke-linecap="round">
+    <path d="M394 443c7 6 13 12 20 18"/>
+    <path d="M139 478c7-5 14-10 22-16"/>
+    <path d="M187 490c5 4 11 7 17 9"/>
+  </g>
+
+  <g fill="#3d2a1d">
+    <ellipse cx="122" cy="196" rx="14" ry="9" transform="rotate(-38 122 196)"/>
+    <ellipse cx="432" cy="180" rx="12" ry="8" transform="rotate(28 432 180)"/>
+  </g>
+  <g fill="none" stroke="#f3e7d7" stroke-width="2" stroke-linecap="round">
+    <path d="M114 190c6 5 11 9 17 13"/>
+    <path d="M426 186c5-3 9-7 13-12"/>
+  </g>
+</svg>
