@@ -14,7 +14,6 @@ while ( have_posts() ) :
 	$weight  = annhien_meta( get_the_ID(), 'trong_luong' );
 	$roast   = annhien_meta( get_the_ID(), 'do_rang' );
 	$flavor  = annhien_meta( get_the_ID(), 'huong_vi' );
-	$subject = rawurlencode( 'Đặt hàng: ' . get_the_title() );
 	?>
 	<article class="single-product">
 		<div class="container single-product__grid">
@@ -40,13 +39,6 @@ while ( have_posts() ) :
 					<?php endif; ?>
 					<div><dt>Xuất xứ</dt><dd>Đắk Lắk, Việt Nam</dd></div>
 				</dl>
-
-				<div class="single-product__actions">
-					<a class="btn" href="tel:+84901234567">Gọi đặt hàng</a>
-					<a class="btn btn--ghost" href="mailto:hello@annhien.vn?subject=<?php echo esc_attr( $subject ); ?>">
-						Đặt qua email
-					</a>
-				</div>
 
 				<div class="single-product__content">
 					<?php the_content(); ?>

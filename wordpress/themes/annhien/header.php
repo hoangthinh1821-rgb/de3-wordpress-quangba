@@ -16,7 +16,7 @@
 <a class="skip-link" href="#noi-dung">Bỏ qua điều hướng</a>
 
 <div class="site-topbar">
-	Rang mộc mỗi tuần · Miễn phí giao hàng nội thành Buôn Ma Thuột cho đơn từ 300.000đ
+	Rang mộc mỗi tuần · Ghé xưởng rang ở Buôn Ma Thuột để nếm thử
 </div>
 
 <header class="site-header">
@@ -40,8 +40,6 @@
 			);
 			?>
 		</nav>
-
-		<a class="btn header-cta" href="<?php echo esc_url( home_url( '/lien-he/' ) ); ?>">Đặt hàng</a>
 
 		<button class="nav-toggle" type="button" aria-expanded="false" aria-controls="menu-chinh">
 			<span class="screen-reader-text">Mở menu</span>

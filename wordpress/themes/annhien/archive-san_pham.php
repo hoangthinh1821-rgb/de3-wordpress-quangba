@@ -34,20 +34,5 @@ get_header();
 	<?php endif; ?>
 </div>
 
-<div class="cta">
-	<div class="container">
-		<div class="cta__panel">
-			<div>
-				<h2>Cần chọn giúp một gu?</h2>
-				<p>Gọi 0901 234 567 hoặc ghé xưởng rang ở Buôn Ma Thuột để nếm thử trước khi mua.</p>
-			</div>
-			<div class="cta__actions">
-				<a class="btn" href="tel:+84901234567">0901 234 567</a>
-				<a class="btn btn--light" href="<?php echo esc_url( home_url( '/lien-he/' ) ); ?>">Liên hệ</a>
-			</div>
-		</div>
-	</div>
-</div>
-
 <?php
 get_footer();

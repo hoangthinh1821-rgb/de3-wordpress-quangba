@@ -36,7 +36,7 @@ get_header();
 				</div>
 				<div class="hero__stat">
 					<strong>24 giờ</strong>
-					<span>Giao nội thành</span>
+					<span>Đóng gói sau rang</span>
 				</div>
 			</div>
 		</div>
@@ -46,7 +46,7 @@ get_header();
 				alt="Ly cà phê rang mộc An Nhiên" width="560" height="560" fetchpriority="high">
 			<div class="hero__badge">
 				<strong>Mẻ rang tuần này</strong>
-				Đã sẵn sàng — giao trong 24h
+				Vừa rang xong — ghi ngày trên nhãn
 			</div>
 		</div>
 	</div>
@@ -71,12 +71,11 @@ get_header();
 		</div>
 		<div class="strip__item">
 			<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-				<path d="M3 7h11v10H3z"/>
-				<path d="M14 10h4l3 3v4h-7"/>
-				<circle cx="7" cy="17" r="2"/>
-				<circle cx="17" cy="17" r="2"/>
+				<path d="M4 9h12v6a5 5 0 0 1-5 5H9a5 5 0 0 1-5-5V9Z"/>
+				<path d="M16 10h2a3 3 0 0 1 0 6h-2"/>
+				<path d="M8 3v2M12 3v2"/>
 			</svg>
-			<div><strong>Giao nhanh nội thành</strong><span>Miễn phí cho đơn từ 300.000đ</span></div>
+			<div><strong>Ghé xưởng nếm thử</strong><span>Thứ 7 hằng tuần, 9:00 – 11:00</span></div>
 		</div>
 	</div>
 </div>
@@ -147,7 +146,7 @@ get_header();
 				</li>
 				<li>
 					<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 13 4 4 10-10"/></svg>
-					Đóng gói trong 24 giờ, giao toàn quốc
+					Đóng gói trong 24 giờ sau khi rang
 				</li>
 			</ul>
 		</div>
@@ -160,21 +159,6 @@ get_header();
 			“Một túi cà phê tốt không cần quá nhiều chữ nghĩa — chỉ cần đúng hạt, đúng lửa và đúng ngày rang.”
 			<cite>An Nhiên · Xưởng rang Buôn Ma Thuột</cite>
 		</blockquote>
-	</div>
-</section>
-
-<section class="cta cta--flush-top">
-	<div class="container">
-		<div class="cta__panel">
-			<div>
-				<h2>Đặt hàng hoặc cần tư vấn?</h2>
-				<p>Gọi cho chúng tôi từ 8:00 – 18:00, hoặc để lại lời nhắn — chúng tôi sẽ chọn giúp bạn gu rang phù hợp.</p>
-			</div>
-			<div class="cta__actions">
-				<a class="btn" href="tel:+84901234567">0901 234 567</a>
-				<a class="btn btn--light" href="<?php echo esc_url( home_url( '/lien-he/' ) ); ?>">Liên hệ</a>
-			</div>
-		</div>
 	</div>
 </section>
 

@@ -15,7 +15,7 @@
 				<span class="brand__tagline"><?php bloginfo( 'description' ); ?></span>
 				<p class="footer-about">
 					Cà phê rang mộc từ hạt Robusta và Arabica trồng tại Đắk Lắk,
-					rang mới mỗi tuần và giao tận nơi.
+					rang mới mỗi tuần và ghi ngày rang trên từng túi.
 				</p>
 			</div>
 
