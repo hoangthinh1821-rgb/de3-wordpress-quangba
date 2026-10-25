@@ -9,6 +9,9 @@ nginx/certs/*.crt
 nginx/certs/*.pem
 !nginx/certs/.gitkeep
 
+# File cấu hình sinh tại chỗ (chứa mật khẩu exporter)
+mysqld-exporter/.my.cnf
+
 # Dữ liệu backup
 backups/
 *.dump

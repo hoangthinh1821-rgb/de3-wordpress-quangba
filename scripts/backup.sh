@@ -33,6 +33,7 @@ chmod 600 "$DB_FILE"
 
 # --- 2. Thu muc wp-content (anh san pham, plugin, theme) ---
 docker run --rm \
+    --user "$(id -u):$(id -g)" \
     -v de3-wordpress_wordpress_data:/data:ro \
     -v "$BACKUP_DIR":/backup \
     nginx:alpine \

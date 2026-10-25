@@ -6,6 +6,7 @@ apiVersion: 1
 datasources:
   # Metrics (Prometheus)
   - name: Prometheus
+    uid: prometheus-main
     type: prometheus
     access: proxy
     url: http://prometheus:9090
@@ -16,6 +17,7 @@ datasources:
 
   # Logs (Loki)
   - name: Loki
+    uid: loki-main
     type: loki
     access: proxy
     url: http://loki:3100

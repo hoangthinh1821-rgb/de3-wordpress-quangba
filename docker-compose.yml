@@ -248,8 +248,14 @@ services:
     <<: *common
     image: prom/mysqld-exporter:latest
     container_name: de3-mysqld-exporter
-    environment:
-      DATA_SOURCE_NAME: "${MYSQL_EXPORTER_USER}:${MYSQL_EXPORTER_PASSWORD}@(mysql:3306)/"
+    # Chay bang chinh uid cua nguoi trien khai de doc duoc file 600
+    user: "1000:1000"
+    # mysqld-exporter >= 0.16 khong con doc DATA_SOURCE_NAME,
+    # bat buoc dung file cau hinh .my.cnf (sinh boi scripts/init-env.sh)
+    command:
+      - --config.my-cnf=/etc/mysqld-exporter/.my.cnf
+    volumes:
+      - ./mysqld-exporter/.my.cnf:/etc/mysqld-exporter/.my.cnf:ro
     networks:
       - backend
       - monitoring
