@@ -43,7 +43,7 @@ docker run --rm \
 
 # --- 3. Xoa ban cu, giu $RETENTION ban moi nhat ---
 for pattern in "db_${MYSQL_DATABASE}_*.sql.gz" "wpdata_*.tar.gz"; do
-    # shellcheck disable=SC2012
+    # shellcheck disable=SC2012,SC2086
     ls -1t "$BACKUP_DIR"/$pattern 2>/dev/null | tail -n +"$((RETENTION + 1))" | xargs -r rm -f
 done
 
