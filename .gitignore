@@ -27,3 +27,6 @@ Thumbs.db
 .vscode/
 .idea/
 *.swp
+
+# Tep khoa tam cua Word/Office
+~\$*
